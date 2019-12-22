@@ -18,11 +18,11 @@ CREATE TABLE IF NOT EXISTS `trip` (
 );
 
 CREATE TABLE IF NOT EXISTS `trip_user` (
-      trip_id int,
-      user_id int,
-      PRIMARY KEY (trip_id, user_id),
-      FOREIGN KEY (trip_id) REFERENCES trip (id),
-      FOREIGN KEY (user_id) REFERENCES user_profile (id)
+    trip_id int,
+    user_id int,
+    PRIMARY KEY (trip_id, user_id),
+    FOREIGN KEY (trip_id) REFERENCES trip (id),
+    FOREIGN KEY (user_id) REFERENCES user_profile (id)
 );
 
 CREATE TABLE IF NOT EXISTS `expense` (
