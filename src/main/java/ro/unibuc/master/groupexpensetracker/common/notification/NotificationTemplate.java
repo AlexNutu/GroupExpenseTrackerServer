@@ -1,4 +1,4 @@
-package ro.unibuc.master.groupexpensetracker.data.notification;
+package ro.unibuc.master.groupexpensetracker.common.notification;
 
 public interface NotificationTemplate {
     public static final String ADD_MEMBER = "{username1} a fost adaugat in {trip} de {username2}.";

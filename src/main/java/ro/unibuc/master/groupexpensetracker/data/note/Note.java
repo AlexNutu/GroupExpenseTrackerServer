@@ -1,11 +1,12 @@
-package ro.unibuc.master.groupexpensetracker.data.expense;
+package ro.unibuc.master.groupexpensetracker.data.note;
 
-import lombok.AllArgsConstructor;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 import ro.unibuc.master.groupexpensetracker.data.AbstractAuditingEntity;
-import ro.unibuc.master.groupexpensetracker.data.trip.Trip;
+import ro.unibuc.master.groupexpensetracker.data.noteboard.NoteBoard;
 import ro.unibuc.master.groupexpensetracker.data.userprofile.UserProfile;
 
 import javax.persistence.CascadeType;
@@ -16,17 +17,12 @@ import javax.persistence.ManyToOne;
 @EqualsAndHashCode(callSuper = true)
 @Entity
 @NoArgsConstructor
-@AllArgsConstructor
-public class Expense extends AbstractAuditingEntity {
-    private String expensiveType;
-    private String product;
-    private float sum;
-    private String currency;
-    private float percent;
+public class Note extends AbstractAuditingEntity {
+    private String message;
 
     @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     private UserProfile userProfile;
 
     @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-    private Trip trip;
+    private NoteBoard noteBoard;
 }

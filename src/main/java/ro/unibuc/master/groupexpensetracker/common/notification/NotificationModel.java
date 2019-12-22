@@ -1,4 +1,4 @@
-package ro.unibuc.master.groupexpensetracker.data.notification;
+package ro.unibuc.master.groupexpensetracker.common.notification;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
