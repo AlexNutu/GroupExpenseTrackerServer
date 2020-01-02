@@ -15,8 +15,8 @@ import java.util.List;
 @Entity
 @NoArgsConstructor
 public class UserProfile extends AbstractAuditingEntity {
-    private String name;
-    private String username;
+    private String firstName;
+    private String lastName;
     private String password;
     private String email;
 
@@ -29,7 +29,9 @@ public class UserProfile extends AbstractAuditingEntity {
     public static UserDTO toDto(UserProfile userProfile) {
         UserDTO userDTO = new UserDTO();
         userDTO.setId(userProfile.getId());
-        userDTO.setName(userProfile.getName());
+        userDTO.setFirstName(userProfile.getFirstName());
+        userDTO.setLastName(userProfile.getLastName());
+        userDTO.setEmail(userProfile.getEmail());
         return userDTO;
     }
 }

@@ -6,4 +6,7 @@ import ro.unibuc.master.groupexpensetracker.data.userprofile.UserProfile;
 
 @Repository
 public interface UserProfileRepository extends JpaRepository<UserProfile, Long> {
+    UserProfile findByEmail(String email);
+
+    UserProfile findByEmailAndPassword(String email, String password);
 }

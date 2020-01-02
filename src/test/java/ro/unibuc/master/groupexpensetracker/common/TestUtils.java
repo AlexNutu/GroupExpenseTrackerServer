@@ -11,13 +11,15 @@ public class TestUtils {
 
     public static UserProfile getMockedUserProfile1() {
         UserProfile userProfile = new UserProfile();
-        userProfile.setName("Michael");
+        userProfile.setFirstName("Thompson");
+        userProfile.setLastName("Michael");
         return userProfile;
     }
 
     public static UserProfile getMockedUserProfile2() {
         UserProfile userProfile = new UserProfile();
-        userProfile.setName("Robert");
+        userProfile.setFirstName("Covington");
+        userProfile.setLastName("Robert");
         return userProfile;
     }
 
@@ -32,6 +34,6 @@ public class TestUtils {
     public static Expense getMockedExpense() {
         Trip trip = getMockedTrip();
         UserProfile userProfile = getMockedUserProfile1();
-        return new Expense("Collect Expense", "Ported Boxes 2017", 23, "USD", 62.24F, userProfile, trip);
+        return new Expense("Collect Expense", "Ported Boxes 2017", 23, "USD", userProfile, trip);
     }
 }

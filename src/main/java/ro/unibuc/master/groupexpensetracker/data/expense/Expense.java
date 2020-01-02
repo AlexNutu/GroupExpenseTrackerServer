@@ -22,7 +22,6 @@ public class Expense extends AbstractAuditingEntity {
     private String product;
     private float sum;
     private String currency;
-    private float percent;
 
     @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     private UserProfile userProfile;

@@ -2,10 +2,10 @@ CREATE TABLE IF NOT EXISTS `user_profile` (
     id int NOT NULL AUTO_INCREMENT PRIMARY KEY,
     create_date DATETIME,
     modify_date DATETIME,
-    username varchar(255),
+    email varchar(255),
     password varchar(255),
-    name varchar(255),
-    email varchar(255)
+    first_name varchar(255),
+    last_name varchar(255)
 );
 
 CREATE TABLE IF NOT EXISTS `trip` (
@@ -14,7 +14,8 @@ CREATE TABLE IF NOT EXISTS `trip` (
     modify_date DATETIME,
     name varchar(255),
     destination varchar(255),
-    start_date DATETIME
+    start_date DATETIME,
+    end_date DATETIME
 );
 
 CREATE TABLE IF NOT EXISTS `trip_user` (

@@ -20,9 +20,9 @@ public class NotificationService {
 
     public NotificationDTO sendAddMemberNotification(UserProfile newMember, String tripName, UserProfile currentMember) {
         NotificationTemplateParameters notificationTemplateParameters = new NotificationTemplateParameters.NotificationParametersBuilder()
-                .username1(newMember.getName())
+                .username1(newMember.getFirstName() + " " + newMember.getLastName())
                 .trip(tripName)
-                .username2(currentMember.getName())
+                .username2(currentMember.getFirstName() + " " + currentMember.getLastName())
                 .build();
 
         NotificationModel notificationModel = new NotificationModel(NotificationTemplate.ADD_MEMBER, notificationTemplateParameters);
@@ -32,12 +32,11 @@ public class NotificationService {
 
     public NotificationDTO sendCollectSumNotification(Expense expense) {
         NotificationTemplateParameters notificationTemplateParameters = new NotificationTemplateParameters.NotificationParametersBuilder()
-                .username1(expense.getUserProfile().getName())
+                .username1(expense.getUserProfile().getFirstName() + " " + expense.getUserProfile().getLastName())
                 .expense(String.valueOf(expense.getSum()))
                 .currency(expense.getCurrency())
                 .trip(expense.getTrip().getName())
                 .product(expense.getProduct())
-                .percent(String.valueOf(expense.getPercent()))
                 .build();
 
         NotificationModel notificationModel = new NotificationModel(NotificationTemplate.COLLECT_SUM, notificationTemplateParameters);

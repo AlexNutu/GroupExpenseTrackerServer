@@ -1,5 +1,7 @@
 package ro.unibuc.master.groupexpensetracker.domain.service;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import ro.unibuc.master.groupexpensetracker.data.userprofile.UserProfile;
 import ro.unibuc.master.groupexpensetracker.domain.repository.UserProfileRepository;
@@ -24,4 +26,24 @@ public class UserProfileService {
     public void saveAll(List<UserProfile> userProfileList) {
         userProfileRepository.saveAll(userProfileList);
     }
+
+    public ResponseEntity createUser(UserProfile userProfile) {
+        UserProfile user = userProfileRepository.findByEmail(userProfile.getEmail());
+        if (user != null) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("The email address is already used");
+        } else {
+            UserProfile userDB = userProfileRepository.save(userProfile);
+            return ResponseEntity.ok(UserProfile.toDto(userDB));
+        }
+    }
+
+    public ResponseEntity getUserDetails(UserProfile userProfile) {
+        UserProfile user = userProfileRepository.findByEmailAndPassword(userProfile.getEmail(), userProfile.getPassword());
+        if (user != null) {
+            return ResponseEntity.ok(UserProfile.toDto(user));
+        } else {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("The email or the password is invalid");
+        }
+    }
+
 }

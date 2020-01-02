@@ -13,6 +13,7 @@ import ro.unibuc.master.groupexpensetracker.data.trip.Trip;
 import ro.unibuc.master.groupexpensetracker.data.userprofile.UserProfile;
 import ro.unibuc.master.groupexpensetracker.domain.repository.TripRepository;
 import ro.unibuc.master.groupexpensetracker.exception.EntityNotFoundException;
+import ro.unibuc.master.groupexpensetracker.presentation.dto.TripDTO;
 import ro.unibuc.master.groupexpensetracker.presentation.dto.UserDTO;
 
 import java.util.ArrayList;
@@ -56,8 +57,9 @@ public class TripService {
         return ResponseEntity.ok().build();
     }
 
-    public Trip getTripById(Long id) {
-        return tripRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Could not find trip by id"));
+    public TripDTO getTripById(Long id) {
+        Trip trip = tripRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Could not find trip by id"));
+        return Trip.toDto(trip);
     }
 
     public Page<Trip> findAll(Sort.Direction sortingDirection, String orderBy, final String search, final Integer offset, final Integer size) {
