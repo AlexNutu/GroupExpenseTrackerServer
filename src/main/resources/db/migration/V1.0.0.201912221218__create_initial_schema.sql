@@ -39,33 +39,14 @@ CREATE TABLE IF NOT EXISTS `expense` (
     FOREIGN KEY (user_id) REFERENCES user_profile (id)
 );
 
-CREATE TABLE IF NOT EXISTS `note_board` (
-    id int NOT NULL AUTO_INCREMENT PRIMARY KEY,
+CREATE TABLE IF NOT EXISTS `to_do_list` (
+	id int NOT NULL AUTO_INCREMENT PRIMARY KEY,
     create_date DATETIME,
     modify_date DATETIME,
-    name varchar(255),
+	description varchar(255),
     trip_id int,
-    FOREIGN KEY (trip_id) REFERENCES trip (id)
-);
-
-CREATE TABLE IF NOT EXISTS `note` (
-    id int NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    create_date DATETIME,
-    modify_date DATETIME,
-    message varchar(255),
     user_id int,
-    note_board_id int,
-    FOREIGN KEY (user_id) REFERENCES user_profile (id),
-    FOREIGN KEY (note_board_id) REFERENCES trip (id)
-);
-
-CREATE TABLE IF NOT EXISTS `note_board_lock` (
-    id int NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    create_date DATETIME,
-    modify_date DATETIME,
-    locked boolean,
-    user_id int,
-    note_board_id int,
-    FOREIGN KEY (user_id) REFERENCES user_profile (id),
-    FOREIGN KEY (note_board_id) REFERENCES trip (id)
+    finished boolean,
+    FOREIGN KEY (trip_id) REFERENCES trip (id),
+    FOREIGN KEY (user_id) REFERENCES user_profile (id)
 );

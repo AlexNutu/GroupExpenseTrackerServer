@@ -4,22 +4,26 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import ro.unibuc.master.groupexpensetracker.data.AbstractAuditingEntity;
-import ro.unibuc.master.groupexpensetracker.data.note.Note;
 import ro.unibuc.master.groupexpensetracker.data.trip.Trip;
+import ro.unibuc.master.groupexpensetracker.data.userprofile.UserProfile;
 
-import javax.persistence.*;
-import java.util.List;
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.OneToOne;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
 @Entity
 @NoArgsConstructor
-public class NoteBoard extends AbstractAuditingEntity {
-    private String name;
+public class ToDoList extends AbstractAuditingEntity {
+    private String description;
+
+    private boolean finished;
 
     @OneToOne(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     private Trip trip;
 
-    @OneToMany(mappedBy = "noteBoard", fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-    private List<Note> notes;
+    @OneToOne(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    private UserProfile userProfile;
 }

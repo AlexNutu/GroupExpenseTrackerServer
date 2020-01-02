@@ -62,6 +62,10 @@ public class TripService {
         return Trip.toDto(trip);
     }
 
+    public Trip getTrip(Long id) {
+        return tripRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Could not find trip by id"));
+    }
+
     public Page<Trip> findAll(Sort.Direction sortingDirection, String orderBy, final String search, final Integer offset, final Integer size) {
         final List<SearchCriteria> searchCriteriaList = EntityUtils.generateSearchCriteria(search);
         final Specification<Trip> spec = new EntitySpecification<>(searchCriteriaList);

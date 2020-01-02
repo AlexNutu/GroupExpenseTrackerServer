@@ -2,8 +2,9 @@ package ro.unibuc.master.groupexpensetracker.domain.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
-import ro.unibuc.master.groupexpensetracker.data.note.Note;
+import ro.unibuc.master.groupexpensetracker.data.noteboard.ToDoList;
 
 @Repository
-public interface NoteRepository extends JpaRepository<Note, Long> {
+public interface ToDoListRepository extends JpaRepository<ToDoList, Long> {
+    ToDoList findByTripId(long tripId);
 }
