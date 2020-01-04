@@ -1,5 +1,6 @@
 package ro.unibuc.master.groupexpensetracker.domain.service;
 
+import com.tunyk.currencyconverter.api.CurrencyConverterException;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +17,7 @@ public class ExpenseServiceTest {
     ExpenseService expenseService;
 
     @Test
-    public void testProcessExpense() {
+    public void testProcessExpense() throws CurrencyConverterException {
         Expense expense = TestUtils.getMockedExpense();
         expenseService.processExpense(expense);
     }

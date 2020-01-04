@@ -1,5 +1,6 @@
 package ro.unibuc.master.groupexpensetracker.presentation.controller;
 
+import com.tunyk.currencyconverter.api.CurrencyConverterException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
@@ -27,7 +28,7 @@ public class ExpenseController {
     }
 
     @PostMapping
-    public ResponseEntity addExpense(@RequestBody Expense expense) {
+    public ResponseEntity addExpense(@RequestBody Expense expense) throws CurrencyConverterException {
         return expenseService.processExpense(expense);
     }
 }

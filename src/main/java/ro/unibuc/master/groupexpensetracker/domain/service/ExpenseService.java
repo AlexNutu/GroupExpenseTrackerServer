@@ -1,5 +1,6 @@
 package ro.unibuc.master.groupexpensetracker.domain.service;
 
+import com.tunyk.currencyconverter.api.CurrencyConverterException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -17,40 +18,54 @@ import ro.unibuc.master.groupexpensetracker.domain.utils.expensestrategy.Collect
 import ro.unibuc.master.groupexpensetracker.domain.utils.expensestrategy.ContextExpense;
 import ro.unibuc.master.groupexpensetracker.domain.utils.expensestrategy.GroupExpense;
 import ro.unibuc.master.groupexpensetracker.domain.utils.expensestrategy.SimpleExpense;
-import ro.unibuc.master.groupexpensetracker.exception.IllegalExpensiveException;
+import ro.unibuc.master.groupexpensetracker.exception.IllegalExpenseException;
 
 import java.util.List;
 
-@Slf4j
 @Service
 public class ExpenseService {
 
     private final ExpenseRepository expenseRepository;
 
-    public ExpenseService(ExpenseRepository expenseRepository) {
+    private final NotificationService notificationService;
+
+    private final TripService tripService;
+
+    public ExpenseService(ExpenseRepository expenseRepository, NotificationService notificationService, TripService tripService) {
         this.expenseRepository = expenseRepository;
+        this.notificationService = notificationService;
+        this.tripService = tripService;
     }
 
-    public ResponseEntity processExpense(Expense expense) {
+    public ResponseEntity processExpense(Expense expense) throws CurrencyConverterException {
         ContextExpense contextExpense = setContextExpenseByExpenseType(expense);
         contextExpense.executeCalculate(expense);
         return ResponseEntity.ok().build();
     }
 
     private ContextExpense setContextExpenseByExpenseType(Expense expense) {
-        ContextExpense contextExpense = null;
+        ContextExpense contextExpense;
         switch (expense.getExpensiveType()) {
             case StringUtils.SIMPLE_EXPENSE:
-                contextExpense = new ContextExpense(new SimpleExpense(expenseRepository));
+                contextExpense = new ContextExpense(new SimpleExpense(expenseRepository, notificationService, tripService));
                 break;
             case StringUtils.GROUP_EXPENSE:
-                contextExpense = new ContextExpense(new GroupExpense(expenseRepository));
+                contextExpense = new ContextExpense(new GroupExpense(expenseRepository, notificationService, tripService));
+                break;
+            case StringUtils.INITIAL_GROUP_EXPENSE:
+                contextExpense = new ContextExpense(new GroupExpense(expenseRepository, notificationService, tripService));
                 break;
             case StringUtils.COLLECT_EXPENSE:
-                contextExpense = new ContextExpense(new CollectExpense(expenseRepository));
+                contextExpense = new ContextExpense(new CollectExpense(expenseRepository, notificationService, tripService));
+                break;
+            case StringUtils.INITIAL_COLLECT_EXPENSE:
+                contextExpense = new ContextExpense(new CollectExpense(expenseRepository, notificationService, tripService));
+                break;
+            case StringUtils.FINAL_COLLECT_EXPENSE:
+                contextExpense = new ContextExpense(new CollectExpense(expenseRepository, notificationService, tripService));
                 break;
             default:
-                throw new IllegalExpensiveException("Could not found this type of expensive: " + expense.getExpensiveType());
+                throw new IllegalExpenseException("Could not found this type of expensive: " + expense.getExpensiveType());
         }
         return contextExpense;
     }

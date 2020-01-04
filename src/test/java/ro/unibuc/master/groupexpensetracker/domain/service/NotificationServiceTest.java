@@ -27,11 +27,4 @@ class NotificationServiceTest {
         NotificationDTO notificationDTO = notificationService.sendAddMemberNotification(newMember, trip.getName(), currentMember);
         System.out.println(notificationDTO);
     }
-
-    @Test
-    void testSendCollectSumNotification() {
-        Expense expense = TestUtils.getMockedExpense();
-        NotificationDTO notificationDTO = notificationService.sendCollectSumNotification(expense);
-        System.out.println(notificationDTO);
-    }
 }

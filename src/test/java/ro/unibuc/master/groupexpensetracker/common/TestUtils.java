@@ -34,6 +34,6 @@ public class TestUtils {
     public static Expense getMockedExpense() {
         Trip trip = getMockedTrip();
         UserProfile userProfile = getMockedUserProfile1();
-        return new Expense("Collect Expense", "Ported Boxes 2017", 23, "USD", userProfile, trip);
+        return new Expense("Collect Expense", "Ported Boxes 2017", 23, "USD", 92, userProfile, trip);
     }
 }

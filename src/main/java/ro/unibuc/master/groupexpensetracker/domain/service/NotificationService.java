@@ -1,22 +1,30 @@
 package ro.unibuc.master.groupexpensetracker.domain.service;
 
-import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import ro.unibuc.master.groupexpensetracker.common.notification.NotificationModel;
 import ro.unibuc.master.groupexpensetracker.common.notification.NotificationTemplate;
 import ro.unibuc.master.groupexpensetracker.common.notification.NotificationTemplateParameters;
 import ro.unibuc.master.groupexpensetracker.data.expense.Expense;
+import ro.unibuc.master.groupexpensetracker.data.notification.Notification;
 import ro.unibuc.master.groupexpensetracker.data.userprofile.UserProfile;
+import ro.unibuc.master.groupexpensetracker.domain.repository.NotificationRepository;
 import ro.unibuc.master.groupexpensetracker.presentation.dto.NotificationDTO;
 
 import java.lang.reflect.Field;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Slf4j
 @Service
-@NoArgsConstructor
 public class NotificationService {
+
+    private final NotificationRepository notificationRepository;
+
+    public NotificationService(NotificationRepository notificationRepository) {
+        this.notificationRepository = notificationRepository;
+    }
 
     public NotificationDTO sendAddMemberNotification(UserProfile newMember, String tripName, UserProfile currentMember) {
         NotificationTemplateParameters notificationTemplateParameters = new NotificationTemplateParameters.NotificationParametersBuilder()
@@ -30,7 +38,23 @@ public class NotificationService {
         return new NotificationDTO(tripName, message, LocalDateTime.now());
     }
 
-    public NotificationDTO sendCollectSumNotification(Expense expense) {
+    public void saveCollectExpensiveNotification(Expense expense, String percent, String notificationType, UserProfile userProfile) {
+        NotificationTemplateParameters notificationTemplateParameters = new NotificationTemplateParameters.NotificationParametersBuilder()
+                .username1(expense.getUserProfile().getFirstName() + " " + expense.getUserProfile().getLastName())
+                .expense(String.valueOf(expense.getSum()))
+                .currency(expense.getCurrency())
+                .percent(percent)
+                .product(expense.getProduct())
+                .build();
+
+        NotificationModel notificationModel = new NotificationModel(notificationType, notificationTemplateParameters);
+        String message = getMessage(notificationModel);
+
+        Notification notification = new Notification(expense.getTrip().getName(), message, false, userProfile);
+        notificationRepository.save(notification);
+    }
+
+    public void saveSimpleExpenseNotification(Expense expense, List<UserProfile> userProfileList) {
         NotificationTemplateParameters notificationTemplateParameters = new NotificationTemplateParameters.NotificationParametersBuilder()
                 .username1(expense.getUserProfile().getFirstName() + " " + expense.getUserProfile().getLastName())
                 .expense(String.valueOf(expense.getSum()))
@@ -39,9 +63,77 @@ public class NotificationService {
                 .product(expense.getProduct())
                 .build();
 
-        NotificationModel notificationModel = new NotificationModel(NotificationTemplate.COLLECT_SUM, notificationTemplateParameters);
+        NotificationModel notificationModel = new NotificationModel(NotificationTemplate.ADD_SIMPLE_EXPENSE, notificationTemplateParameters);
         String message = getMessage(notificationModel);
-        return new NotificationDTO(expense.getTrip().getName(), message, LocalDateTime.now());
+
+        List<Notification> notifications = new ArrayList<>();
+        for (UserProfile userProfile : userProfileList) {
+            if (!userProfile.equals(expense.getUserProfile())) {
+                Notification notification = new Notification(expense.getTrip().getName(), message, false, userProfile);
+                notifications.add(notification);
+            }
+        }
+        notificationRepository.saveAll(notifications);
+    }
+
+    public void saveInitialGroupExpenseNotification(Expense expense, List<UserProfile> userProfileList) {
+        NotificationTemplateParameters notificationTemplateParameters = new NotificationTemplateParameters.NotificationParametersBuilder()
+                .username1(expense.getUserProfile().getFirstName() + " " + expense.getUserProfile().getLastName())
+                .expense(String.valueOf(expense.getSum()))
+                .currency(expense.getCurrency())
+                .remainingSum(String.valueOf(expense.getSum() / userProfileList.size()))
+                .product(expense.getProduct())
+                .build();
+
+        NotificationModel notificationModel = new NotificationModel(NotificationTemplate.INITIAL_GROUP_EXPENSE, notificationTemplateParameters);
+        String message = getMessage(notificationModel);
+
+        List<Notification> notifications = new ArrayList<>();
+        for (UserProfile userProfile : userProfileList) {
+            if (!userProfile.equals(expense.getUserProfile())) {
+                Notification notification = new Notification(expense.getTrip().getName(), message, false, userProfile);
+                notifications.add(notification);
+            }
+        }
+        notificationRepository.saveAll(notifications);
+    }
+
+    public void saveInitialCollectExpenseNotification(Expense expense, List<UserProfile> userProfileList) {
+        NotificationTemplateParameters notificationTemplateParameters = new NotificationTemplateParameters.NotificationParametersBuilder()
+                .username1(expense.getUserProfile().getFirstName() + " " + expense.getUserProfile().getLastName())
+                .expense(String.valueOf(expense.getSum()))
+                .currency(expense.getCurrency())
+                .remainingSum(String.valueOf(expense.getSum() / userProfileList.size()))
+                .product(expense.getProduct())
+                .trip(expense.getTrip().getName())
+                .build();
+
+        NotificationModel notificationModel = new NotificationModel(NotificationTemplate.INITIAL_COLLECT_EXPENSE, notificationTemplateParameters);
+        String message = getMessage(notificationModel);
+
+        List<Notification> notifications = new ArrayList<>();
+        for (UserProfile userProfile : userProfileList) {
+            if (!userProfile.equals(expense.getUserProfile())) {
+                Notification notification = new Notification(expense.getTrip().getName(), message, false, userProfile);
+                notifications.add(notification);
+            }
+        }
+        notificationRepository.saveAll(notifications);
+    }
+
+    public void saveExpenseNotification(Expense expense, UserProfile userProfile) {
+        NotificationTemplateParameters notificationTemplateParameters = new NotificationTemplateParameters.NotificationParametersBuilder()
+                .username1(expense.getUserProfile().getFirstName() + " " + expense.getUserProfile().getLastName())
+                .expense(String.valueOf(expense.getSum()))
+                .currency(expense.getCurrency())
+                .product(expense.getProduct())
+                .build();
+
+        NotificationModel notificationModel = new NotificationModel(NotificationTemplate.EXPENSE, notificationTemplateParameters);
+        String message = getMessage(notificationModel);
+
+        Notification notification = new Notification(expense.getTrip().getName(), message, false, userProfile);
+        notificationRepository.save(notification);
     }
 
     // TODO: to be replaced with a more efficient way to create message notification

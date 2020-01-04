@@ -4,8 +4,15 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
 import ro.unibuc.master.groupexpensetracker.data.expense.Expense;
-import ro.unibuc.master.groupexpensetracker.data.trip.Trip;
+
+import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface ExpenseRepository extends JpaRepository<Expense, Long>, JpaSpecificationExecutor<Expense> {
+    Optional<Expense> findByProductAndExpensiveTypeAndTripId(String product, String expensiveType, long tripId);
+
+    List<Expense> findByProductAndExpensiveTypeAndUserProfileIdAndTripId(String product, String expensiveType, long userId, long tripId);
+
+    List<Expense> findByProductAndTripId(String product, long tripId);
 }
