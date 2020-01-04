@@ -48,6 +48,13 @@ public class EntitySpecification<T> implements Specification<T> {
         } else if (String.class.isAssignableFrom(fieldClass)) {
             return cb.like(cb.lower((Expression<String>) this.getPath(root, searchParam)),
                     "%" + searchParam.getValue().toLowerCase() + "%");
+        } else if (Long.class.isAssignableFrom(fieldClass)) {
+            switch (searchParam.getOperation()) {
+                case ":":
+                    return cb.equal((Expression<Long>) this.getPath(root, searchParam), searchParam.getValue());
+                case "!":
+                    return cb.notEqual((Expression<Long>) this.getPath(root, searchParam), searchParam.getValue());
+            }
         }
 
         return null;

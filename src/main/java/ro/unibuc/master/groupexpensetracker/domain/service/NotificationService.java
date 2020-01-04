@@ -40,7 +40,7 @@ public class NotificationService {
 
     public void saveCollectExpensiveNotification(Expense expense, String percent, String notificationType, UserProfile userProfile) {
         NotificationTemplateParameters notificationTemplateParameters = new NotificationTemplateParameters.NotificationParametersBuilder()
-                .username1(expense.getUserProfile().getFirstName() + " " + expense.getUserProfile().getLastName())
+                .username1(expense.getUser().getFirstName() + " " + expense.getUser().getLastName())
                 .expense(String.valueOf(expense.getSum()))
                 .currency(expense.getCurrency())
                 .percent(percent)
@@ -56,7 +56,7 @@ public class NotificationService {
 
     public void saveSimpleExpenseNotification(Expense expense, List<UserProfile> userProfileList) {
         NotificationTemplateParameters notificationTemplateParameters = new NotificationTemplateParameters.NotificationParametersBuilder()
-                .username1(expense.getUserProfile().getFirstName() + " " + expense.getUserProfile().getLastName())
+                .username1(expense.getUser().getFirstName() + " " + expense.getUser().getLastName())
                 .expense(String.valueOf(expense.getSum()))
                 .currency(expense.getCurrency())
                 .trip(expense.getTrip().getName())
@@ -68,7 +68,7 @@ public class NotificationService {
 
         List<Notification> notifications = new ArrayList<>();
         for (UserProfile userProfile : userProfileList) {
-            if (!userProfile.equals(expense.getUserProfile())) {
+            if (!userProfile.equals(expense.getUser())) {
                 Notification notification = new Notification(expense.getTrip().getName(), message, false, userProfile);
                 notifications.add(notification);
             }
@@ -78,7 +78,7 @@ public class NotificationService {
 
     public void saveInitialGroupExpenseNotification(Expense expense, List<UserProfile> userProfileList) {
         NotificationTemplateParameters notificationTemplateParameters = new NotificationTemplateParameters.NotificationParametersBuilder()
-                .username1(expense.getUserProfile().getFirstName() + " " + expense.getUserProfile().getLastName())
+                .username1(expense.getUser().getFirstName() + " " + expense.getUser().getLastName())
                 .expense(String.valueOf(expense.getSum()))
                 .currency(expense.getCurrency())
                 .remainingSum(String.valueOf(expense.getSum() / userProfileList.size()))
@@ -90,7 +90,7 @@ public class NotificationService {
 
         List<Notification> notifications = new ArrayList<>();
         for (UserProfile userProfile : userProfileList) {
-            if (!userProfile.equals(expense.getUserProfile())) {
+            if (!userProfile.equals(expense.getUser())) {
                 Notification notification = new Notification(expense.getTrip().getName(), message, false, userProfile);
                 notifications.add(notification);
             }
@@ -100,7 +100,7 @@ public class NotificationService {
 
     public void saveInitialCollectExpenseNotification(Expense expense, List<UserProfile> userProfileList) {
         NotificationTemplateParameters notificationTemplateParameters = new NotificationTemplateParameters.NotificationParametersBuilder()
-                .username1(expense.getUserProfile().getFirstName() + " " + expense.getUserProfile().getLastName())
+                .username1(expense.getUser().getFirstName() + " " + expense.getUser().getLastName())
                 .expense(String.valueOf(expense.getSum()))
                 .currency(expense.getCurrency())
                 .remainingSum(String.valueOf(expense.getSum() / userProfileList.size()))
@@ -113,7 +113,7 @@ public class NotificationService {
 
         List<Notification> notifications = new ArrayList<>();
         for (UserProfile userProfile : userProfileList) {
-            if (!userProfile.equals(expense.getUserProfile())) {
+            if (!userProfile.equals(expense.getUser())) {
                 Notification notification = new Notification(expense.getTrip().getName(), message, false, userProfile);
                 notifications.add(notification);
             }
@@ -123,7 +123,7 @@ public class NotificationService {
 
     public void saveExpenseNotification(Expense expense, UserProfile userProfile) {
         NotificationTemplateParameters notificationTemplateParameters = new NotificationTemplateParameters.NotificationParametersBuilder()
-                .username1(expense.getUserProfile().getFirstName() + " " + expense.getUserProfile().getLastName())
+                .username1(expense.getUser().getFirstName() + " " + expense.getUser().getLastName())
                 .expense(String.valueOf(expense.getSum()))
                 .currency(expense.getCurrency())
                 .product(expense.getProduct())

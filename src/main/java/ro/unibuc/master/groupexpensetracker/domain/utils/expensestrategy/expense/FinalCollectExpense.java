@@ -35,7 +35,7 @@ public class FinalCollectExpense implements ExpenseStrategy {
         Trip trip = tripService.getTrip(expense.getTrip().getId());
         Expense initialExpense = expenseRepository.findByProductAndExpensiveTypeAndTripId(expense.getProduct(), StringUtils.INITIAL_COLLECT_EXPENSE, expense.getTrip().getId())
                 .orElseThrow(() -> new EntityNotFoundException("Could not find initial collect expense for " + expense.getProduct()));
-        if (!initialExpense.getUserProfile().equals(expense.getUserProfile())) {
+        if (!initialExpense.getUser().equals(expense.getUser())) {
             throw new IllegalExpenseException("Unauthorized to performe the expense");
         }
 
@@ -51,7 +51,7 @@ public class FinalCollectExpense implements ExpenseStrategy {
         if (checkExpense) {
             expenseRepository.save(expense);
             for (UserProfile userProfile : trip.getMembers()) {
-                if (!userProfile.equals(expense.getUserProfile())) {
+                if (!userProfile.equals(expense.getUser())) {
                     notificationService.saveExpenseNotification(expense, userProfile);
                 }
             }

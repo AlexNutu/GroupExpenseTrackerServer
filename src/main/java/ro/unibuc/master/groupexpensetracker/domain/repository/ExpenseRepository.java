@@ -12,7 +12,7 @@ import java.util.Optional;
 public interface ExpenseRepository extends JpaRepository<Expense, Long>, JpaSpecificationExecutor<Expense> {
     Optional<Expense> findByProductAndExpensiveTypeAndTripId(String product, String expensiveType, long tripId);
 
-    List<Expense> findByProductAndExpensiveTypeAndUserProfileIdAndTripId(String product, String expensiveType, long userId, long tripId);
+    List<Expense> findByProductAndExpensiveTypeAndUserIdAndTripId(String product, String expensiveType, long userId, long tripId);
 
     List<Expense> findByProductAndTripId(String product, long tripId);
 }

@@ -25,7 +25,7 @@ public class Expense extends AbstractAuditingEntity {
     private float percent;
 
     @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-    private UserProfile userProfile;
+    private UserProfile user;
 
     @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     private Trip trip;

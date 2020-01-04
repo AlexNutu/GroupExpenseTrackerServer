@@ -34,6 +34,7 @@ CREATE TABLE IF NOT EXISTS `expense` (
     sum float(10,2),
     currency varchar(255),
     percent float(3,2),
+    product varchar(255),
     user_id int,
     trip_id int,
     FOREIGN KEY (trip_id) REFERENCES trip (id),

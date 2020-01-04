@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ro.unibuc.master.groupexpensetracker.data.trip.Trip;
 import ro.unibuc.master.groupexpensetracker.domain.service.TripService;
+import ro.unibuc.master.groupexpensetracker.presentation.dto.TripDTO;
 import ro.unibuc.master.groupexpensetracker.presentation.dto.UserDTO;
 
 import java.util.List;
@@ -29,9 +30,9 @@ public class TripController {
         return tripService.findAll(direction, orderBy, search, offset, size);
     }
 
-    @PutMapping(value = "member/bulk")
-    public ResponseEntity addNewMembers(@RequestBody List<UserDTO> users) {
-        return tripService.addNewMembers(users);
+    @PostMapping(value = "/{id}/member")
+    public ResponseEntity addNewMember(@RequestBody UserDTO userDTO, @PathVariable("id") Long tripId) {
+        return tripService.addNewMember(userDTO, tripId);
     }
 
     @GetMapping(value = "/{id}")
@@ -40,12 +41,12 @@ public class TripController {
     }
 
     @PutMapping(value = "/{id}")
-    public ResponseEntity updateTrip(@RequestBody Trip trip, @PathVariable("id") Long tripId) {
-        return tripService.updateTrip(trip, tripId);
+    public ResponseEntity updateTrip(@RequestBody TripDTO tripDTO, @PathVariable("id") Long tripId) {
+        return tripService.updateTrip(tripDTO, tripId);
     }
 
     @PostMapping
-    public ResponseEntity addTrip(@RequestBody Trip trip) {
-        return tripService.addTrip(trip);
+    public ResponseEntity addTrip(@RequestBody TripDTO tripDTO) {
+        return tripService.addTrip(tripDTO);
     }
 }

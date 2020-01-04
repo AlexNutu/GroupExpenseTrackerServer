@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import ro.unibuc.master.groupexpensetracker.common.utils.EntitySpecification;
 import ro.unibuc.master.groupexpensetracker.common.utils.EntityUtils;
 import ro.unibuc.master.groupexpensetracker.common.utils.SearchCriteria;
+import ro.unibuc.master.groupexpensetracker.common.utils.StringUtils;
 import ro.unibuc.master.groupexpensetracker.data.trip.Trip;
 import ro.unibuc.master.groupexpensetracker.data.userprofile.UserProfile;
 import ro.unibuc.master.groupexpensetracker.domain.repository.TripRepository;
@@ -18,6 +19,7 @@ import ro.unibuc.master.groupexpensetracker.presentation.dto.UserDTO;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class TripService {
@@ -31,29 +33,31 @@ public class TripService {
         this.userProfileService = userProfileService;
     }
 
-    public ResponseEntity addTrip(Trip trip) {
+    public ResponseEntity addTrip(TripDTO tripDTO) {
+        Trip trip = toEntity(tripDTO);
         tripRepository.save(trip);
         return ResponseEntity.ok().build();
     }
 
-    public ResponseEntity updateTrip(Trip trip, Long tripId) {
+    public ResponseEntity updateTrip(TripDTO tripDTO, Long tripId) {
         Trip tripDB = tripRepository.findById(tripId)
                 .orElseThrow(() -> new EntityNotFoundException("Could not find trip by id: " + tripId));
-        tripDB.setName(trip.getName());
-        tripDB.setStartDate(trip.getStartDate());
-        tripDB.setDestination(trip.getDestination());
+        tripDB.setName(tripDTO.getName());
+        tripDB.setStartDate(StringUtils.convertStringToDate(tripDTO.getStartDate()).atTime(0, 0));
+        tripDB.setEndDate(StringUtils.convertStringToDate(tripDTO.getStartDate()).atTime(0, 0));
+        tripDB.setDestination(tripDTO.getDestination());
 
-        tripRepository.save(trip);
+        tripRepository.save(tripDB);
         return ResponseEntity.ok().build();
     }
 
-    public ResponseEntity addNewMembers(List<UserDTO> userDTOS) {
-        List<UserProfile> userProfileList = new ArrayList<>();
-        for (UserDTO userDTO : userDTOS) {
-            UserProfile userProfile = userProfileService.getById(userDTO.getId());
-            userProfileList.add(userProfile);
+    public ResponseEntity addNewMember(UserDTO userDTO, long tripId) {
+        UserProfile userProfile = userProfileService.getById(userDTO.getId());
+        Trip trip = getTrip(tripId);
+        if (trip.getMembers().indexOf(userProfile) == -1) {
+            trip.getMembers().add(userProfile);
+            tripRepository.save(trip);
         }
-        userProfileService.saveAll(userProfileList);
         return ResponseEntity.ok().build();
     }
 
@@ -81,5 +85,20 @@ public class TripService {
         } else {
             return new PageImpl<>(tripRepository.findAll(spec));
         }
+    }
+
+    private Trip toEntity(TripDTO tripDTO) {
+        Trip trip = new Trip();
+        trip.setName(tripDTO.getName());
+        trip.setDestination(tripDTO.getDestination());
+        trip.setStartDate(StringUtils.convertStringToDate(tripDTO.getStartDate()).atTime(0, 0));
+        trip.setEndDate(StringUtils.convertStringToDate(tripDTO.getEndDate()).atTime(0, 0));
+        List<UserProfile> members = new ArrayList<>();
+        for(UserDTO userDTO : tripDTO.getMembers()) {
+            UserProfile userProfile = userProfileService.getById(userDTO.getId());
+            members.add(userProfile);
+        }
+        trip.setMembers(members);
+        return trip;
     }
 }

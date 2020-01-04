@@ -36,8 +36,8 @@ public class CollectExpense implements ExpenseStrategy {
         }
         Expense initialExpense = expenseRepository.findByProductAndExpensiveTypeAndTripId(expense.getProduct(), StringUtils.INITIAL_COLLECT_EXPENSE, expense.getTrip().getId())
                 .orElseThrow(() -> new EntityNotFoundException("Could not find initial collect expense for " + expense.getProduct()));
-        List<Expense> userExpenses = expenseRepository.findByProductAndExpensiveTypeAndUserProfileIdAndTripId(expense.getProduct(), StringUtils.COLLECT_EXPENSE,
-                expense.getUserProfile().getId(), expense.getTrip().getId());
+        List<Expense> userExpenses = expenseRepository.findByProductAndExpensiveTypeAndUserIdAndTripId(expense.getProduct(), StringUtils.COLLECT_EXPENSE,
+                expense.getUser().getId(), expense.getTrip().getId());
 
         Currency currency;
         if (!initialExpense.getCurrency().equals("RON")) {
@@ -57,6 +57,6 @@ public class CollectExpense implements ExpenseStrategy {
         float percent = total / initialExpense.getSum();
         String notificationType = percent < initialExpense.getPercent() ?
                 NotificationTemplate.COLLECT_SUM : NotificationTemplate.COLLECT_SUM_SUCCESSFULLY;
-        notificationService.saveCollectExpensiveNotification(expense, String.valueOf(percent), notificationType, initialExpense.getUserProfile());
+        notificationService.saveCollectExpensiveNotification(expense, String.valueOf(percent), notificationType, initialExpense.getUser());
     }
 }

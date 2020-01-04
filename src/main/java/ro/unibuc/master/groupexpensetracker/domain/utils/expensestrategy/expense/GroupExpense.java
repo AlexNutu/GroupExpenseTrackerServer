@@ -37,8 +37,8 @@ public class GroupExpense implements ExpenseStrategy {
         }
         Expense initialExpense = expenseRepository.findByProductAndExpensiveTypeAndTripId(expense.getProduct(), StringUtils.INITIAL_GROUP_EXPENSE, expense.getTrip().getId())
                 .orElseThrow(() -> new EntityNotFoundException("Could not find initial group expense for " + expense.getProduct()));
-        List<Expense> userExpenses = expenseRepository.findByProductAndExpensiveTypeAndUserProfileIdAndTripId(expense.getProduct(), StringUtils.GROUP_EXPENSE,
-                expense.getUserProfile().getId(), expense.getTrip().getId());
+        List<Expense> userExpenses = expenseRepository.findByProductAndExpensiveTypeAndUserIdAndTripId(expense.getProduct(), StringUtils.GROUP_EXPENSE,
+                expense.getUser().getId(), expense.getTrip().getId());
 
         Currency currency;
         if (!initialExpense.getCurrency().equals("RON")) {
@@ -52,7 +52,7 @@ public class GroupExpense implements ExpenseStrategy {
         }
 
         expenseRepository.save(expense);
-        notificationService.saveExpenseNotification(expense, initialExpense.getUserProfile());
+        notificationService.saveExpenseNotification(expense, initialExpense.getUser());
     }
 
     private float calculateTotalExpenses(List<Expense> expenses, Currency currency) throws CurrencyConverterException {

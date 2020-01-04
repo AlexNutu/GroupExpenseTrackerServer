@@ -28,10 +28,14 @@ public class ExpenseService {
 
     private final TripService tripService;
 
-    public ExpenseService(ExpenseRepository expenseRepository, NotificationService notificationService, TripService tripService) {
+    private final UserProfileService userProfileService;
+
+    public ExpenseService(ExpenseRepository expenseRepository, NotificationService notificationService,
+                          TripService tripService, UserProfileService userProfileService) {
         this.expenseRepository = expenseRepository;
         this.notificationService = notificationService;
         this.tripService = tripService;
+        this.userProfileService = userProfileService;
     }
 
     public ResponseEntity processExpense(Expense expense) throws CurrencyConverterException {
@@ -44,7 +48,7 @@ public class ExpenseService {
         ContextExpense contextExpense;
         switch (expense.getExpensiveType()) {
             case StringUtils.SIMPLE_EXPENSE:
-                contextExpense = new ContextExpense(new SimpleExpense(expenseRepository, notificationService, tripService));
+                contextExpense = new ContextExpense(new SimpleExpense(expenseRepository, notificationService, tripService, userProfileService));
                 break;
             case StringUtils.GROUP_EXPENSE:
                 contextExpense = new ContextExpense(new GroupExpense(expenseRepository, notificationService, tripService));

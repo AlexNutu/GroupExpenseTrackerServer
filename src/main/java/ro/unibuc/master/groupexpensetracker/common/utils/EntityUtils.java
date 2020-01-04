@@ -10,13 +10,13 @@ import java.util.regex.Pattern;
 
 public class EntityUtils {
 
-    private static final String FILTER_PATTERN = "([a-zA-Z.]+)(:|<|>)([a-zA-Z0-9-*_!\\*'\\(\\);:@&=+\\$/\\?%#\\[\\] ]+)|(.*!\\\\(.*EN.*\\\\).*),";
+    private static final String FILTER_PATTERN = "([a-zA-Z.]+)(:|<|>|!)([a-zA-Z0-9-*_!\\*'\\(\\);:@&=+\\$/\\?%#\\[\\] ]+)|(.*!\\\\(.*EN.*\\\\).*),";
 
     private static final String[] RESERVED_CHARACTERS = {"_", "!",  "\\*", "'", "\\(", "\\)", ";", ":", "@" ,"&", "=", "\\$", "," , "/", "\\?", "%", "#", "\\[",  "]"};
 
-    public static PageRequest getPageRequest(Sort.Direction direction, String orderBy, int offset, int size) {
+    public static PageRequest getPageRequest(Sort.Direction direction, String orderBy, Integer page, Integer size) {
         return direction != null && orderBy != null ?
-                PageRequest.of(offset, size, direction, orderBy) : PageRequest.of(offset, size);
+                PageRequest.of(page, size, direction, orderBy) : PageRequest.of(page, size);
     }
 
     public static List<SearchCriteria> generateSearchCriteria(final String search) {
