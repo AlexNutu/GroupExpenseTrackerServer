@@ -1,4 +1,4 @@
-package ro.unibuc.master.groupexpensetracker.domain.utils.expensestrategy;
+package ro.unibuc.master.groupexpensetracker.domain.utils.expensestrategy.expense;
 
 import com.tunyk.currencyconverter.BankUaCom;
 import com.tunyk.currencyconverter.api.Currency;
@@ -10,6 +10,7 @@ import ro.unibuc.master.groupexpensetracker.data.trip.Trip;
 import ro.unibuc.master.groupexpensetracker.domain.repository.ExpenseRepository;
 import ro.unibuc.master.groupexpensetracker.domain.service.NotificationService;
 import ro.unibuc.master.groupexpensetracker.domain.service.TripService;
+import ro.unibuc.master.groupexpensetracker.domain.utils.expensestrategy.ExpenseStrategy;
 import ro.unibuc.master.groupexpensetracker.exception.EntityNotFoundException;
 import ro.unibuc.master.groupexpensetracker.exception.IllegalExpenseException;
 
@@ -34,31 +35,24 @@ public class GroupExpense implements ExpenseStrategy {
         if (!expense.getCurrency().equals("RON")) {
             Currency.fromString(expense.getCurrency());
         }
-        Trip trip = tripService.getTrip(expense.getTrip().getId());
-        if (expense.getExpensiveType().equals(StringUtils.INITIAL_GROUP_EXPENSE)) {
-            expenseRepository.save(expense);
-            notificationService.saveInitialGroupExpenseNotification(expense, trip.getMembers());
-        }
-        if (expense.getExpensiveType().equals(StringUtils.GROUP_EXPENSE)) {
-            Expense initialExpense = expenseRepository.findByProductAndExpensiveTypeAndTripId(expense.getProduct(), StringUtils.INITIAL_GROUP_EXPENSE, expense.getTrip().getId())
-                    .orElseThrow(() -> new EntityNotFoundException("Could not find initial group expense for " + expense.getProduct()));
-            List<Expense> userExpenses = expenseRepository.findByProductAndExpensiveTypeAndUserProfileIdAndTripId(expense.getProduct(), StringUtils.GROUP_EXPENSE,
-                    expense.getUserProfile().getId(), expense.getTrip().getId());
+        Expense initialExpense = expenseRepository.findByProductAndExpensiveTypeAndTripId(expense.getProduct(), StringUtils.INITIAL_GROUP_EXPENSE, expense.getTrip().getId())
+                .orElseThrow(() -> new EntityNotFoundException("Could not find initial group expense for " + expense.getProduct()));
+        List<Expense> userExpenses = expenseRepository.findByProductAndExpensiveTypeAndUserProfileIdAndTripId(expense.getProduct(), StringUtils.GROUP_EXPENSE,
+                expense.getUserProfile().getId(), expense.getTrip().getId());
 
-            Currency currency;
-            if (!initialExpense.getCurrency().equals("RON")) {
-                currency = Currency.fromString(initialExpense.getCurrency());
-            } else {
-                currency = Currency.MDL;
-            }
-            float total = calculateTotalExpenses(userExpenses, currency);
-            if (total >= initialExpense.getSum()) {
-                throw new IllegalExpenseException("The sum for " + expense.getProduct() + "has been already paid.");
-            }
-
-            expenseRepository.save(expense);
-            notificationService.saveExpenseNotification(expense, initialExpense.getUserProfile());
+        Currency currency;
+        if (!initialExpense.getCurrency().equals("RON")) {
+            currency = Currency.fromString(initialExpense.getCurrency());
+        } else {
+            currency = Currency.MDL;
         }
+        float total = calculateTotalExpenses(userExpenses, currency);
+        if (total >= initialExpense.getSum()) {
+            throw new IllegalExpenseException("The sum for " + expense.getProduct() + "has been already paid.");
+        }
+
+        expenseRepository.save(expense);
+        notificationService.saveExpenseNotification(expense, initialExpense.getUserProfile());
     }
 
     private float calculateTotalExpenses(List<Expense> expenses, Currency currency) throws CurrencyConverterException {
