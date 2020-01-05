@@ -47,7 +47,7 @@ public class FinalCollectExpense implements ExpenseStrategy {
                 .orElseThrow(() -> new EntityNotFoundException("Could not find initial collect expense for " + expense.getProduct()));
         Optional<Expense> finalExpense = expenseRepository.findByProductAndExpensiveTypeAndTripId(expense.getProduct(), StringUtils.FINAL_COLLECT_EXPENSE, expense.getTrip().getId());
         if (finalExpense.isPresent()) {
-            throw new EntityNotFoundException("Final collect expense for " + expense.getProduct() + " has been already made.");
+            throw new IllegalExpenseException("Final collect expense for " + expense.getProduct() + " has been already made.");
         }
         if (!initialExpense.getUser().equals(expense.getUser())) {
             throw new IllegalExpenseException("Unauthorized to perform the expense");
@@ -71,6 +71,8 @@ public class FinalCollectExpense implements ExpenseStrategy {
                     notificationService.saveExpenseNotification(expense, userProfile);
                 }
             }
+        } else {
+            throw new IllegalExpenseException("You do not have enough money to perform the expense");
         }
     }
 }
