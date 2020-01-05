@@ -6,7 +6,6 @@ import lombok.NoArgsConstructor;
 @Getter
 public class NotificationTemplateParameters {
     private String username1;
-    private String username2;
     private String expense;
     private String currency;
     private String trip;
@@ -16,7 +15,6 @@ public class NotificationTemplateParameters {
 
     public NotificationTemplateParameters(NotificationParametersBuilder notificationParametersBuilder) {
         this.username1 = notificationParametersBuilder.username1;
-        this.username2 = notificationParametersBuilder.username2;
         this.expense = notificationParametersBuilder.expense;
         this.currency = notificationParametersBuilder.currency;
         this.trip = notificationParametersBuilder.trip;
@@ -28,7 +26,6 @@ public class NotificationTemplateParameters {
     @NoArgsConstructor
     public static class NotificationParametersBuilder {
         private String username1;
-        private String username2;
         private String expense;
         private String currency;
         private String trip;
@@ -38,11 +35,6 @@ public class NotificationTemplateParameters {
 
         public NotificationParametersBuilder username1(String username1) {
             this.username1 = username1;
-            return this;
-        }
-
-        public NotificationParametersBuilder username2(String username2) {
-            this.username2 = username2;
             return this;
         }
 

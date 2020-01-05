@@ -33,16 +33,17 @@ public class NotificationService {
         this.notificationRepository = notificationRepository;
     }
 
-    public NotificationDTO sendAddMemberNotification(UserProfile newMember, String tripName, UserProfile currentMember) {
+    public void saveAddMemberNotification(UserProfile oldMember, String tripName, UserProfile newMember) {
         NotificationTemplateParameters notificationTemplateParameters = new NotificationTemplateParameters.NotificationParametersBuilder()
                 .username1(newMember.getFirstName() + " " + newMember.getLastName())
                 .trip(tripName)
-                .username2(currentMember.getFirstName() + " " + currentMember.getLastName())
                 .build();
 
         NotificationModel notificationModel = new NotificationModel(NotificationTemplate.ADD_MEMBER, notificationTemplateParameters);
         String message = getMessage(notificationModel);
-        return new NotificationDTO(tripName, message, LocalDateTime.now());
+
+        Notification notification = new Notification(tripName, message, false, oldMember);
+        notificationRepository.save(notification);
     }
 
     public void saveCollectExpensiveNotification(Expense expense, String percent, String notificationType, UserProfile userProfile) {

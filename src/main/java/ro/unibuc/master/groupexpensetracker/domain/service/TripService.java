@@ -27,9 +27,13 @@ public class TripService {
 
     private final UserProfileService userProfileService;
 
-    public TripService(TripRepository tripRepository, UserProfileService userProfileService) {
+    private final NotificationService notificationService;
+
+    public TripService(TripRepository tripRepository, UserProfileService userProfileService,
+                       NotificationService notificationService) {
         this.tripRepository = tripRepository;
         this.userProfileService = userProfileService;
+        this.notificationService = notificationService;
     }
 
     public ResponseEntity addTrip(TripDTO tripDTO) {
@@ -56,6 +60,12 @@ public class TripService {
         if (trip.getMembers().indexOf(userProfile) == -1) {
             trip.getMembers().add(userProfile);
             tripRepository.save(trip);
+
+            for(UserProfile user : trip.getMembers()) {
+                if (!user.equals(userProfile)) {
+                    notificationService.saveAddMemberNotification(user, trip.getName(), userProfile);
+                }
+            }
         }
         return ResponseEntity.ok().build();
     }
