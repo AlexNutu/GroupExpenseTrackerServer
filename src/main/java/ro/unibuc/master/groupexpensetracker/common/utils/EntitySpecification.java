@@ -1,6 +1,7 @@
 package ro.unibuc.master.groupexpensetracker.common.utils;
 
 import org.springframework.data.jpa.domain.Specification;
+import ro.unibuc.master.groupexpensetracker.data.userprofile.UserProfile;
 
 import javax.persistence.criteria.*;
 import java.time.LocalDateTime;
@@ -55,6 +56,14 @@ public class EntitySpecification<T> implements Specification<T> {
                 case "!":
                     return cb.notEqual((Expression<Long>) this.getPath(root, searchParam), searchParam.getValue());
             }
+        } else if (Boolean.class.isAssignableFrom(fieldClass)) {
+            return cb.equal(root.get(searchParam.getKey()), Boolean.parseBoolean(searchParam.getValue()));
+        } else if (List.class.isAssignableFrom(fieldClass)) {
+            Join join = root.join(searchParam.getKey());
+            return cb.equal(join.get("id"), Long.parseLong(searchParam.getValue()));
+        } else if (UserProfile.class.isAssignableFrom(fieldClass)) {
+            Join join = root.join(searchParam.getKey());
+            return cb.equal(join.get("id"), Long.parseLong(searchParam.getValue()));
         }
 
         return null;

@@ -1,10 +1,17 @@
 package ro.unibuc.master.groupexpensetracker.domain.service;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import ro.unibuc.master.groupexpensetracker.common.notification.NotificationModel;
 import ro.unibuc.master.groupexpensetracker.common.notification.NotificationTemplate;
 import ro.unibuc.master.groupexpensetracker.common.notification.NotificationTemplateParameters;
+import ro.unibuc.master.groupexpensetracker.common.utils.EntitySpecification;
+import ro.unibuc.master.groupexpensetracker.common.utils.EntityUtils;
+import ro.unibuc.master.groupexpensetracker.common.utils.SearchCriteria;
 import ro.unibuc.master.groupexpensetracker.data.expense.Expense;
 import ro.unibuc.master.groupexpensetracker.data.notification.Notification;
 import ro.unibuc.master.groupexpensetracker.data.userprofile.UserProfile;
@@ -155,5 +162,31 @@ public class NotificationService {
             }
         }
         return message;
+    }
+
+    public Page<Notification> findAll(Sort.Direction sortingDirection, String orderBy, final String search, final Integer offset, final Integer size) {
+        final List<SearchCriteria> searchCriteriaList = EntityUtils.generateSearchCriteria(search);
+        final Specification<Notification> spec = new EntitySpecification<>(searchCriteriaList);
+
+        if (sortingDirection == null && orderBy == null) {
+            orderBy = "createDate";
+            sortingDirection = Sort.Direction.DESC;
+        }
+
+        Page<Notification> notificationPage;
+        if (size != null) {
+            notificationPage = notificationRepository.findAll(spec,
+                    EntityUtils.getPageRequest(sortingDirection, orderBy, offset, size));
+        } else {
+            notificationPage = new PageImpl<>(notificationRepository.findAll(spec));
+        }
+
+        List<Notification> notifications = notificationPage.getContent();
+        for (Notification notification : notifications) {
+            notification.setSent(true);
+            notificationRepository.save(notification);
+        }
+
+        return notificationPage;
     }
 }

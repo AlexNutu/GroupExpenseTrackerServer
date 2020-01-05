@@ -24,7 +24,7 @@ public class Notification extends AbstractAuditingEntity {
 
     private String message;
 
-    private boolean sent;
+    private Boolean sent;
 
     @JsonIgnore
     @OneToOne(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
