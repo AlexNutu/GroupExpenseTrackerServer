@@ -19,7 +19,6 @@ import ro.unibuc.master.groupexpensetracker.presentation.dto.UserDTO;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class TripService {
@@ -94,7 +93,7 @@ public class TripService {
         trip.setStartDate(StringUtils.convertStringToDate(tripDTO.getStartDate()).atTime(0, 0));
         trip.setEndDate(StringUtils.convertStringToDate(tripDTO.getEndDate()).atTime(0, 0));
         List<UserProfile> members = new ArrayList<>();
-        for(UserDTO userDTO : tripDTO.getMembers()) {
+        for (UserDTO userDTO : tripDTO.getMembers()) {
             UserProfile userProfile = userProfileService.getById(userDTO.getId());
             members.add(userProfile);
         }

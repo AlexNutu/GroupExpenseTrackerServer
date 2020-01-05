@@ -31,7 +31,7 @@ public class Note extends AbstractAuditingEntity {
         NoteDTO noteDTO = new NoteDTO();
         noteDTO.setCreateDate(note.getCreateDate());
         noteDTO.setMessage(note.getMessage());
-        noteDTO.setUserDTO(UserProfile.toDto(note.getUser()));
+        noteDTO.setUser(UserProfile.toDto(note.getUser()));
         return noteDTO;
     }
 }

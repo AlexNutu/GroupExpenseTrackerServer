@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import ro.unibuc.master.groupexpensetracker.data.AbstractAuditingEntity;
 import ro.unibuc.master.groupexpensetracker.data.trip.Trip;
 import ro.unibuc.master.groupexpensetracker.data.userprofile.UserProfile;
+import ro.unibuc.master.groupexpensetracker.presentation.dto.ExpenseDTO;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -29,4 +30,14 @@ public class Expense extends AbstractAuditingEntity {
 
     @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     private Trip trip;
+
+    public static ExpenseDTO toDto(Expense expense) {
+        ExpenseDTO expenseDTO = new ExpenseDTO();
+        expenseDTO.setExpensiveType(expense.getExpensiveType());
+        expenseDTO.setProduct(expense.getProduct());
+        expenseDTO.setSum(expense.getSum());
+        expenseDTO.setCurrency(expense.getCurrency());
+        expenseDTO.setUser(UserProfile.toDto(expense.getUser()));
+        return expenseDTO;
+    }
 }

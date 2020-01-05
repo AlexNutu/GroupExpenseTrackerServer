@@ -34,6 +34,7 @@ public class Trip extends AbstractAuditingEntity {
 
     public static TripDTO toDto(Trip trip) {
         TripDTO tripDTO = new TripDTO();
+        tripDTO.setId(trip.getId());
         tripDTO.setName(trip.getName());
         tripDTO.setDestination(trip.getDestination());
         tripDTO.setStartDate(trip.getStartDate().toString());

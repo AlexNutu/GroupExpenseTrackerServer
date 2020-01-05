@@ -4,13 +4,13 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
-
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class NoteDTO {
-    private String message;
+public class ExpenseDTO {
+    private String expensiveType;
+    private String product;
+    private float sum;
+    private String currency;
     private UserDTO user;
-    private LocalDateTime createDate;
 }

@@ -10,6 +10,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class TripDTO {
+    private long id;
     private String name;
     private String destination;
     private String startDate;

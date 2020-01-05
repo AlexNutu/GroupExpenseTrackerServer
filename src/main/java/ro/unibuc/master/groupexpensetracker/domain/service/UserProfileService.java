@@ -85,24 +85,4 @@ public class UserProfileService {
                     .map(UserProfile::toDto);
         }
     }
-
-//    public Page<StockTransactionTypeDTO> searchTransactionDTOS(Sort.Direction direction, String orderBy, String search, Integer offset, Integer size, String subinventoryCode) {
-//        SystemOptions systemOptions = systemOptionsService.findOneByCode("COD_TT_REC");
-//        return searchTransactionType(direction, orderBy, search, offset, size)
-//                .map(transactionType -> toDto(transactionType, subinventoryCode, systemOptions));
-//    }
-//
-//    private StockTransactionTypeDTO toDto(StockTransactionType stockTransactionType, String subinventoryCode, SystemOptions systemOptions) {
-//        boolean associated = stockTransactionType.getStockSubinventories().stream()
-//                .anyMatch(stockSubinventory -> stockSubinventory.getCode().equals(subinventoryCode));
-//        boolean displayCategoies = stockTransactionType.getTransactionTypeId() == Long.parseLong(systemOptions.getValue());
-//        boolean displayDestinations = stockTransactionType.getStockClassTransaction().getClassTransactionId() == TRANSFER_CLASS_ID;
-//        return StockTransactionTypeDTO.builder()
-//                .transactionTypeId(stockTransactionType.getTransactionTypeId())
-//                .name(stockTransactionType.getName())
-//                .associated(associated)
-//                .displayDestinations(displayDestinations)
-//                .displayCategoies(displayCategoies)
-//                .build();
-//    }
 }
