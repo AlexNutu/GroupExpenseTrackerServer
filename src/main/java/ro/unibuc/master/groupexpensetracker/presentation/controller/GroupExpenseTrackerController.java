@@ -1,4 +1,4 @@
-package ro.unibuc.master.groupexpensetracker.controller;
+package ro.unibuc.master.groupexpensetracker.presentation.controller;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
