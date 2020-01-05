@@ -4,12 +4,16 @@ import com.tunyk.currencyconverter.BankUaCom;
 import com.tunyk.currencyconverter.api.Currency;
 import com.tunyk.currencyconverter.api.CurrencyConverter;
 import com.tunyk.currencyconverter.api.CurrencyConverterException;
+import ro.unibuc.master.groupexpensetracker.common.notification.NotificationTemplate;
+import ro.unibuc.master.groupexpensetracker.common.utils.ExpenseUtils;
 import ro.unibuc.master.groupexpensetracker.common.utils.StringUtils;
 import ro.unibuc.master.groupexpensetracker.data.expense.Expense;
 import ro.unibuc.master.groupexpensetracker.data.trip.Trip;
+import ro.unibuc.master.groupexpensetracker.data.userprofile.UserProfile;
 import ro.unibuc.master.groupexpensetracker.domain.repository.ExpenseRepository;
 import ro.unibuc.master.groupexpensetracker.domain.service.NotificationService;
 import ro.unibuc.master.groupexpensetracker.domain.service.TripService;
+import ro.unibuc.master.groupexpensetracker.domain.service.UserProfileService;
 import ro.unibuc.master.groupexpensetracker.domain.utils.expensestrategy.ExpenseStrategy;
 import ro.unibuc.master.groupexpensetracker.exception.EntityNotFoundException;
 import ro.unibuc.master.groupexpensetracker.exception.IllegalExpenseException;
@@ -17,17 +21,20 @@ import ro.unibuc.master.groupexpensetracker.exception.IllegalExpenseException;
 import java.util.List;
 
 public class GroupExpense implements ExpenseStrategy {
-
     private final ExpenseRepository expenseRepository;
 
     private final NotificationService notificationService;
 
     private final TripService tripService;
 
-    public GroupExpense(ExpenseRepository expenseRepository, NotificationService notificationService, TripService tripService) {
+    private final UserProfileService userProfileService;
+
+    public GroupExpense(ExpenseRepository expenseRepository, NotificationService notificationService,
+                        TripService tripService, UserProfileService userProfileService) {
         this.expenseRepository = expenseRepository;
         this.notificationService = notificationService;
         this.tripService = tripService;
+        this.userProfileService = userProfileService;
     }
 
     @Override
@@ -35,6 +42,11 @@ public class GroupExpense implements ExpenseStrategy {
         if (!expense.getCurrency().equals("RON")) {
             Currency.fromString(expense.getCurrency());
         }
+        Trip trip = tripService.getTrip(expense.getTrip().getId());
+        UserProfile userProfile = userProfileService.getById(expense.getUser().getId());
+        expense.setTrip(trip);
+        expense.setUser(userProfile);
+
         Expense initialExpense = expenseRepository.findByProductAndExpensiveTypeAndTripId(expense.getProduct(), StringUtils.INITIAL_GROUP_EXPENSE, expense.getTrip().getId())
                 .orElseThrow(() -> new EntityNotFoundException("Could not find initial group expense for " + expense.getProduct()));
         List<Expense> userExpenses = expenseRepository.findByProductAndExpensiveTypeAndUserIdAndTripId(expense.getProduct(), StringUtils.GROUP_EXPENSE,
@@ -47,8 +59,17 @@ public class GroupExpense implements ExpenseStrategy {
             currency = Currency.MDL;
         }
         float total = calculateTotalExpenses(userExpenses, currency);
-        if (total >= initialExpense.getSum()) {
-            throw new IllegalExpenseException("The sum for " + expense.getProduct() + "has been already paid.");
+        if (total >= initialExpense.getSum() / trip.getMembers().size()) {
+            throw new IllegalExpenseException("The sum for " + expense.getProduct() + " has been already paid.");
+        }
+
+        userExpenses.add(expense);
+        float newTotal = ExpenseUtils.calculateTotalExpenses(userExpenses, currency);
+        float percent = newTotal / (initialExpense.getSum() / trip.getMembers().size());
+        if (percent > 1.05) {
+            float remainingSum = initialExpense.getSum() / trip.getMembers().size() - total;
+            throw new IllegalExpenseException("You have to pay " + remainingSum + " " + initialExpense.getCurrency() +
+                    " for " + initialExpense.getProduct() + ". You paid too much");
         }
 
         expenseRepository.save(expense);

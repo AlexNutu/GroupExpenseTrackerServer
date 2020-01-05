@@ -4,9 +4,11 @@ import com.tunyk.currencyconverter.api.Currency;
 import com.tunyk.currencyconverter.api.CurrencyConverterException;
 import ro.unibuc.master.groupexpensetracker.data.expense.Expense;
 import ro.unibuc.master.groupexpensetracker.data.trip.Trip;
+import ro.unibuc.master.groupexpensetracker.data.userprofile.UserProfile;
 import ro.unibuc.master.groupexpensetracker.domain.repository.ExpenseRepository;
 import ro.unibuc.master.groupexpensetracker.domain.service.NotificationService;
 import ro.unibuc.master.groupexpensetracker.domain.service.TripService;
+import ro.unibuc.master.groupexpensetracker.domain.service.UserProfileService;
 import ro.unibuc.master.groupexpensetracker.domain.utils.expensestrategy.ExpenseStrategy;
 
 public class InitialGroupExpense implements ExpenseStrategy {
@@ -16,10 +18,14 @@ public class InitialGroupExpense implements ExpenseStrategy {
 
     private final TripService tripService;
 
-    public InitialGroupExpense(ExpenseRepository expenseRepository, NotificationService notificationService, TripService tripService) {
+    private final UserProfileService userProfileService;
+
+    public InitialGroupExpense(ExpenseRepository expenseRepository, NotificationService notificationService,
+                               TripService tripService, UserProfileService userProfileService) {
         this.expenseRepository = expenseRepository;
         this.notificationService = notificationService;
         this.tripService = tripService;
+        this.userProfileService = userProfileService;
     }
 
     @Override
@@ -28,6 +34,9 @@ public class InitialGroupExpense implements ExpenseStrategy {
             Currency.fromString(expense.getCurrency());
         }
         Trip trip = tripService.getTrip(expense.getTrip().getId());
+        UserProfile userProfile = userProfileService.getById(expense.getUser().getId());
+        expense.setTrip(trip);
+        expense.setUser(userProfile);
         expenseRepository.save(expense);
         notificationService.saveInitialGroupExpenseNotification(expense, trip.getMembers());
     }

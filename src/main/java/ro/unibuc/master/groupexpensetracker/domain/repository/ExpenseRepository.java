@@ -14,5 +14,5 @@ public interface ExpenseRepository extends JpaRepository<Expense, Long>, JpaSpec
 
     List<Expense> findByProductAndExpensiveTypeAndUserIdAndTripId(String product, String expensiveType, long userId, long tripId);
 
-    List<Expense> findByProductAndTripId(String product, long tripId);
+    List<Expense> findByProductAndTripIdAndExpensiveType(String product, long tripId, String expensiveType);
 }

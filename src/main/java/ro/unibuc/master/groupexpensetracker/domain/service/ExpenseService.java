@@ -51,19 +51,19 @@ public class ExpenseService {
                 contextExpense = new ContextExpense(new SimpleExpense(expenseRepository, notificationService, tripService, userProfileService));
                 break;
             case StringUtils.GROUP_EXPENSE:
-                contextExpense = new ContextExpense(new GroupExpense(expenseRepository, notificationService, tripService));
+                contextExpense = new ContextExpense(new GroupExpense(expenseRepository, notificationService, tripService, userProfileService));
                 break;
             case StringUtils.INITIAL_GROUP_EXPENSE:
-                contextExpense = new ContextExpense(new InitialGroupExpense(expenseRepository, notificationService, tripService));
+                contextExpense = new ContextExpense(new InitialGroupExpense(expenseRepository, notificationService, tripService, userProfileService));
                 break;
             case StringUtils.COLLECT_EXPENSE:
-                contextExpense = new ContextExpense(new CollectExpense(expenseRepository, notificationService, tripService));
+                contextExpense = new ContextExpense(new CollectExpense(expenseRepository, notificationService, tripService, userProfileService));
                 break;
             case StringUtils.INITIAL_COLLECT_EXPENSE:
-                contextExpense = new ContextExpense(new InitialCollectExpense(expenseRepository, notificationService, tripService));
+                contextExpense = new ContextExpense(new InitialCollectExpense(expenseRepository, notificationService, tripService, userProfileService));
                 break;
             case StringUtils.FINAL_COLLECT_EXPENSE:
-                contextExpense = new ContextExpense(new FinalCollectExpense(expenseRepository, notificationService, tripService));
+                contextExpense = new ContextExpense(new FinalCollectExpense(expenseRepository, notificationService, tripService, userProfileService));
                 break;
             default:
                 throw new IllegalExpenseException("Could not found this type of expensive: " + expense.getExpensiveType());

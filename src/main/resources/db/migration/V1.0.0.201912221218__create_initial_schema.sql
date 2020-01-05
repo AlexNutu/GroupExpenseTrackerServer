@@ -33,7 +33,7 @@ CREATE TABLE IF NOT EXISTS `expense` (
     expensive_type varchar(255),
     sum float(10,2),
     currency varchar(255),
-    percent float(3,2),
+    percent float(10,2),
     product varchar(255),
     user_id int,
     trip_id int,
