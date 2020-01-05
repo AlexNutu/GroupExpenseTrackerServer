@@ -9,10 +9,7 @@ import ro.unibuc.master.groupexpensetracker.data.AbstractAuditingEntity;
 import ro.unibuc.master.groupexpensetracker.data.trip.Trip;
 import ro.unibuc.master.groupexpensetracker.data.userprofile.UserProfile;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.OneToOne;
+import javax.persistence.*;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
@@ -27,6 +24,6 @@ public class Notification extends AbstractAuditingEntity {
     private Boolean sent;
 
     @JsonIgnore
-    @OneToOne(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     private UserProfile user;
 }

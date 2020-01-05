@@ -41,14 +41,13 @@ CREATE TABLE IF NOT EXISTS `expense` (
     FOREIGN KEY (user_id) REFERENCES user_profile (id)
 );
 
-CREATE TABLE IF NOT EXISTS `to_do_list` (
+CREATE TABLE IF NOT EXISTS `note` (
 	id int NOT NULL AUTO_INCREMENT PRIMARY KEY,
     create_date DATETIME,
     modify_date DATETIME,
-	description varchar(255),
+	message varchar(255),
     trip_id int,
     user_id int,
-    finished boolean,
     FOREIGN KEY (trip_id) REFERENCES trip (id),
     FOREIGN KEY (user_id) REFERENCES user_profile (id)
 );
