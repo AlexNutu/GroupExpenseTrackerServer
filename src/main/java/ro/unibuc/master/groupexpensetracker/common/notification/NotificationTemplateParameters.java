@@ -12,6 +12,7 @@ public class NotificationTemplateParameters {
     private String trip;
     private String product;
     private String percent;
+    private String remainingSum;
 
     public NotificationTemplateParameters(NotificationParametersBuilder notificationParametersBuilder) {
         this.username1 = notificationParametersBuilder.username1;
@@ -21,6 +22,7 @@ public class NotificationTemplateParameters {
         this.trip = notificationParametersBuilder.trip;
         this.product = notificationParametersBuilder.product;
         this.percent = notificationParametersBuilder.percent;
+        this.remainingSum = notificationParametersBuilder.remainingSum;
     }
 
     @NoArgsConstructor
@@ -32,6 +34,7 @@ public class NotificationTemplateParameters {
         private String trip;
         private String product;
         private String percent;
+        private String remainingSum;
 
         public NotificationParametersBuilder username1(String username1) {
             this.username1 = username1;
@@ -65,6 +68,11 @@ public class NotificationTemplateParameters {
 
         public NotificationParametersBuilder percent(String percent) {
             this.percent = percent;
+            return this;
+        }
+
+        public NotificationParametersBuilder remainingSum(String remainingSum) {
+            this.remainingSum = remainingSum;
             return this;
         }
 

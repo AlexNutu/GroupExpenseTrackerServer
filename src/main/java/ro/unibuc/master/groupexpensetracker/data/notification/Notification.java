@@ -1,5 +1,6 @@
-package ro.unibuc.master.groupexpensetracker.data.expense;
+package ro.unibuc.master.groupexpensetracker.data.notification;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -10,23 +11,22 @@ import ro.unibuc.master.groupexpensetracker.data.userprofile.UserProfile;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
-import javax.persistence.ManyToOne;
+import javax.persistence.FetchType;
+import javax.persistence.OneToOne;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-public class Expense extends AbstractAuditingEntity {
-    private String expensiveType;
-    private String product;
-    private float sum;
-    private String currency;
-    private float percent;
+public class Notification extends AbstractAuditingEntity {
+    private String title;
 
-    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    private String message;
+
+    private Boolean sent;
+
+    @JsonIgnore
+    @OneToOne(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     private UserProfile user;
-
-    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-    private Trip trip;
 }
