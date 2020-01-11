@@ -1,5 +1,7 @@
 package ro.unibuc.master.groupexpensetracker.data.trip;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -30,6 +32,7 @@ public class Trip extends AbstractAuditingEntity {
             joinColumns = @JoinColumn(name = "trip_id"),
             inverseJoinColumns = @JoinColumn(name = "user_id")
     )
+    @JsonIgnore
     private List<UserProfile> members;
 
     public static TripDTO toDto(Trip trip) {
