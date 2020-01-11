@@ -46,7 +46,7 @@ public class TripController {
     }
 
     @PostMapping
-    public ResponseEntity addTrip(@RequestBody TripDTO tripDTO) {
+    public Trip addTrip(@RequestBody TripDTO tripDTO) {
         return tripService.addTrip(tripDTO);
     }
 }

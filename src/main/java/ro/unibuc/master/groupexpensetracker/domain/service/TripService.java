@@ -36,10 +36,10 @@ public class TripService {
         this.notificationService = notificationService;
     }
 
-    public ResponseEntity addTrip(TripDTO tripDTO) {
+    public Trip addTrip(TripDTO tripDTO) {
         Trip trip = toEntity(tripDTO);
-        tripRepository.save(trip);
-        return ResponseEntity.ok().build();
+        Trip savedTrip = tripRepository.save(trip);
+        return savedTrip;
     }
 
     public ResponseEntity updateTrip(TripDTO tripDTO, Long tripId) {
@@ -61,7 +61,7 @@ public class TripService {
             trip.getMembers().add(userProfile);
             tripRepository.save(trip);
 
-            for(UserProfile user : trip.getMembers()) {
+            for (UserProfile user : trip.getMembers()) {
                 if (!user.equals(userProfile)) {
                     notificationService.saveAddMemberNotification(user, trip.getName(), userProfile);
                 }
@@ -103,11 +103,14 @@ public class TripService {
         trip.setStartDate(StringUtils.convertStringToDate(tripDTO.getStartDate()).atTime(0, 0));
         trip.setEndDate(StringUtils.convertStringToDate(tripDTO.getEndDate()).atTime(0, 0));
         List<UserProfile> members = new ArrayList<>();
-        for (UserDTO userDTO : tripDTO.getMembers()) {
-            UserProfile userProfile = userProfileService.getById(userDTO.getId());
-            members.add(userProfile);
+        if (tripDTO.getMembers() != null) {
+            for (UserDTO userDTO : tripDTO.getMembers()) {
+                UserProfile userProfile = userProfileService.getById(userDTO.getId());
+                members.add(userProfile);
+            }
+            trip.setMembers(members);
         }
-        trip.setMembers(members);
+
         return trip;
     }
 }
