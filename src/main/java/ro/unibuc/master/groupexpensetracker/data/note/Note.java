@@ -21,10 +21,10 @@ public class Note extends AbstractAuditingEntity {
 
     private String message;
 
-    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @ManyToOne(cascade = CascadeType.MERGE)
     private UserProfile user;
 
-    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @ManyToOne(cascade = CascadeType.MERGE)
     private Trip trip;
 
     public static NoteDTO toDto(Note note) {
