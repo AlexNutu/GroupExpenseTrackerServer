@@ -41,6 +41,7 @@ public class NoteService {
         if (userProfile == null) {
             throw new EntityNotFoundException("Could not find user by id");
         }
+        note.setApproved(false);
         note.setTrip(trip);
         note.setUser(userProfile);
         noteRepository.save(note);
@@ -50,6 +51,7 @@ public class NoteService {
     public ResponseEntity updateNote(Note note, long noteId) {
         Note noteDB = noteRepository.findById(noteId).orElseThrow(() -> new EntityNotFoundException("Could not find note by id"));
         noteDB.setMessage(note.getMessage());
+        noteDB.setApproved(note.getApproved());
         noteRepository.save(noteDB);
         return ResponseEntity.ok().build();
     }

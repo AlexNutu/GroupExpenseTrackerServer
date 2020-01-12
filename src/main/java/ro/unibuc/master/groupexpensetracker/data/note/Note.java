@@ -21,6 +21,8 @@ public class Note extends AbstractAuditingEntity {
 
     private String message;
 
+    private Boolean approved;
+
     @ManyToOne(cascade = CascadeType.MERGE)
     private UserProfile user;
 
@@ -31,6 +33,7 @@ public class Note extends AbstractAuditingEntity {
         NoteDTO noteDTO = new NoteDTO();
         noteDTO.setCreateDate(note.getCreateDate());
         noteDTO.setMessage(note.getMessage());
+        noteDTO.setApproved(note.getApproved());
         noteDTO.setUser(UserProfile.toDto(note.getUser()));
         return noteDTO;
     }
