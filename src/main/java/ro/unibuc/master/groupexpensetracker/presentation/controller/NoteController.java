@@ -10,6 +10,8 @@ import ro.unibuc.master.groupexpensetracker.domain.service.NoteService;
 import ro.unibuc.master.groupexpensetracker.presentation.dto.NoteDTO;
 import ro.unibuc.master.groupexpensetracker.presentation.dto.TripDTO;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("${note.url}")
 public class NoteController {
@@ -21,7 +23,7 @@ public class NoteController {
     }
 
     @GetMapping
-    public Page<NoteDTO> filterBy(@RequestParam(value = "search", required = false) final String search,
+    public List<NoteDTO> filterBy(@RequestParam(value = "search", required = false) final String search,
                                   @RequestParam(value = "direction", required = false) Sort.Direction direction,
                                   @RequestParam(value = "orderBy", required = false) String orderBy,
                                   @RequestParam(value = "page", required = false) final Integer offset,

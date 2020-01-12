@@ -62,7 +62,7 @@ public class NoteService {
         return ResponseEntity.ok().build();
     }
 
-    public Page<NoteDTO> findAll(Sort.Direction sortingDirection, String orderBy, final String search, final Integer offset, final Integer size) {
+    public List<NoteDTO> findAll(Sort.Direction sortingDirection, String orderBy, final String search, final Integer offset, final Integer size) {
         final List<SearchCriteria> searchCriteriaList = EntityUtils.generateSearchCriteria(search);
         final Specification<Note> spec = new EntitySpecification<>(searchCriteriaList);
 
@@ -74,9 +74,9 @@ public class NoteService {
         if (size != null) {
             return noteRepository.findAll(spec,
                     EntityUtils.getPageRequest(sortingDirection, orderBy, offset, size))
-                    .map(Note::toDto);
+                    .map(Note::toDto).getContent();
         } else {
-            return new PageImpl<>(noteRepository.findAll(spec)).map(Note::toDto);
+            return new PageImpl<>(noteRepository.findAll(spec)).map(Note::toDto).getContent();
         }
     }
 }
