@@ -1,6 +1,7 @@
 package ro.unibuc.master.groupexpensetracker.common.utils;
 
 import org.springframework.data.jpa.domain.Specification;
+import ro.unibuc.master.groupexpensetracker.data.trip.Trip;
 import ro.unibuc.master.groupexpensetracker.data.userprofile.UserProfile;
 
 import javax.persistence.criteria.*;
@@ -62,6 +63,9 @@ public class EntitySpecification<T> implements Specification<T> {
             Join join = root.join(searchParam.getKey());
             return cb.equal(join.get("id"), Long.parseLong(searchParam.getValue()));
         } else if (UserProfile.class.isAssignableFrom(fieldClass)) {
+            Join join = root.join(searchParam.getKey());
+            return cb.equal(join.get("id"), Long.parseLong(searchParam.getValue()));
+        } else if (Trip.class.isAssignableFrom(fieldClass)) {
             Join join = root.join(searchParam.getKey());
             return cb.equal(join.get("id"), Long.parseLong(searchParam.getValue()));
         }
