@@ -31,6 +31,7 @@ public class Note extends AbstractAuditingEntity {
 
     public static NoteDTO toDto(Note note) {
         NoteDTO noteDTO = new NoteDTO();
+        noteDTO.setIdNote(note.getId());
         noteDTO.setCreateDate(note.getCreateDate());
         noteDTO.setMessage(note.getMessage());
         noteDTO.setApproved(note.getApproved());

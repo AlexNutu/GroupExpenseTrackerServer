@@ -10,6 +10,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 public class NoteDTO {
+    private long idNote;
     private String message;
     private Boolean approved;
     private UserDTO user;
