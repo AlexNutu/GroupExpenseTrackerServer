@@ -74,7 +74,7 @@ public class ExpenseService {
         return contextExpense;
     }
 
-    public Page<ExpenseDTO> findAll(Sort.Direction sortingDirection, String orderBy, final String search, final Integer offset, final Integer size) {
+    public List<ExpenseDTO> findAll(Sort.Direction sortingDirection, String orderBy, final String search, final Integer offset, final Integer size) {
         final List<SearchCriteria> searchCriteriaList = EntityUtils.generateSearchCriteria(search);
         final Specification<Expense> spec = new EntitySpecification<>(searchCriteriaList);
 
@@ -86,9 +86,9 @@ public class ExpenseService {
         if (size != null) {
             return expenseRepository.findAll(spec,
                     EntityUtils.getPageRequest(sortingDirection, orderBy, offset, size))
-                    .map(Expense::toDto);
+                    .map(Expense::toDto).getContent();
         } else {
-            return new PageImpl<>(expenseRepository.findAll(spec)).map(Expense::toDto);
+            return new PageImpl<>(expenseRepository.findAll(spec)).map(Expense::toDto).getContent();
         }
     }
 
