@@ -31,6 +31,10 @@ public class UserProfileService {
                 .orElseThrow(() -> new EntityNotFoundException("Could not find user by id"));
     }
 
+    public UserProfile getByEmail(String id) {
+        return userProfileRepository.findByEmail(id);
+    }
+
     public void saveAll(List<UserProfile> userProfileList) {
         userProfileRepository.saveAll(userProfileList);
     }

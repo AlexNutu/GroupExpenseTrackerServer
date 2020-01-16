@@ -10,12 +10,12 @@ import ro.unibuc.master.groupexpensetracker.domain.service.UserProfileService;
 import ro.unibuc.master.groupexpensetracker.presentation.dto.UserDTO;
 
 @RestController
-@RequestMapping("${user.url}")
-public class UserProfileController {
+@RequestMapping("/login")
+public class LoginController {
 
     private final UserProfileService userProfileService;
 
-    public UserProfileController(UserProfileService userProfileService) {
+    public LoginController(UserProfileService userProfileService) {
         this.userProfileService = userProfileService;
     }
 
@@ -28,13 +28,8 @@ public class UserProfileController {
         return Flux.fromIterable(userProfileService.findAll(direction, orderBy, search, offset, size).getContent());
     }
 
-    @PostMapping
-    public Mono<ResponseEntity> createUser(@RequestBody UserProfile userProfile) {
-        return Mono.just(userProfileService.createUser(userProfile));
-    }
-
-    @GetMapping("/{userId}")
-    public Mono<ResponseEntity> getUserDetails(@PathVariable("userId") Long userId) {
-        return Mono.just(userProfileService.getUserDetails(userId));
+    @PostMapping("/")
+    public Mono<ResponseEntity> getUserLoggedId(@RequestBody UserProfile userProfile) {
+        return Mono.just(userProfileService.getUserLoggedId(userProfile));
     }
 }
