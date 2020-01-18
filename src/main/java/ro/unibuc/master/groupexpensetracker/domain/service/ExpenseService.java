@@ -8,7 +8,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import ro.unibuc.master.groupexpensetracker.common.utils.*;
 import ro.unibuc.master.groupexpensetracker.data.expense.Expense;
 import ro.unibuc.master.groupexpensetracker.data.trip.Trip;
@@ -42,7 +41,6 @@ public class ExpenseService {
         this.userProfileService = userProfileService;
     }
 
-    @Transactional
     public ResponseEntity processExpense(Expense expense) throws CurrencyConverterException {
         ContextExpense contextExpense = setContextExpenseByExpenseType(expense);
         contextExpense.executeCalculate(expense);
@@ -94,7 +92,6 @@ public class ExpenseService {
         }
     }
 
-    @Transactional
     public List<ExpenseDTO> getUnperformedExpenses(long tripId, String product) throws CurrencyConverterException {
         List<ExpenseDTO> unperformedExpenses = new ArrayList<>();
         Trip trip = tripService.getTrip(tripId);

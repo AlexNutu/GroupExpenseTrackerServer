@@ -11,7 +11,6 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class NoteDTO {
     private String message;
-    private Boolean approved;
     private UserDTO user;
     private LocalDateTime createDate;
 }

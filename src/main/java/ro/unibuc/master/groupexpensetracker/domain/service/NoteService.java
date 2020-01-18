@@ -9,12 +9,14 @@ import org.springframework.stereotype.Service;
 import ro.unibuc.master.groupexpensetracker.common.utils.EntitySpecification;
 import ro.unibuc.master.groupexpensetracker.common.utils.EntityUtils;
 import ro.unibuc.master.groupexpensetracker.common.utils.SearchCriteria;
+import ro.unibuc.master.groupexpensetracker.data.expense.Expense;
 import ro.unibuc.master.groupexpensetracker.data.note.Note;
 import ro.unibuc.master.groupexpensetracker.data.trip.Trip;
 import ro.unibuc.master.groupexpensetracker.data.userprofile.UserProfile;
 import ro.unibuc.master.groupexpensetracker.domain.repository.NoteRepository;
 import ro.unibuc.master.groupexpensetracker.exception.EntityNotFoundException;
 import ro.unibuc.master.groupexpensetracker.presentation.dto.NoteDTO;
+import ro.unibuc.master.groupexpensetracker.presentation.dto.UserDTO;
 
 import java.util.List;
 
@@ -41,7 +43,6 @@ public class NoteService {
         if (userProfile == null) {
             throw new EntityNotFoundException("Could not find user by id");
         }
-        note.setApproved(false);
         note.setTrip(trip);
         note.setUser(userProfile);
         noteRepository.save(note);
@@ -51,7 +52,6 @@ public class NoteService {
     public ResponseEntity updateNote(Note note, long noteId) {
         Note noteDB = noteRepository.findById(noteId).orElseThrow(() -> new EntityNotFoundException("Could not find note by id"));
         noteDB.setMessage(note.getMessage());
-        noteDB.setApproved(note.getApproved());
         noteRepository.save(noteDB);
         return ResponseEntity.ok().build();
     }
@@ -62,7 +62,7 @@ public class NoteService {
         return ResponseEntity.ok().build();
     }
 
-    public Page<NoteDTO> findAll(Sort.Direction sortingDirection, String orderBy, final String search, final Integer offset, final Integer size) {
+    public List<NoteDTO> findAll(Sort.Direction sortingDirection, String orderBy, final String search, final Integer offset, final Integer size) {
         final List<SearchCriteria> searchCriteriaList = EntityUtils.generateSearchCriteria(search);
         final Specification<Note> spec = new EntitySpecification<>(searchCriteriaList);
 
@@ -74,9 +74,9 @@ public class NoteService {
         if (size != null) {
             return noteRepository.findAll(spec,
                     EntityUtils.getPageRequest(sortingDirection, orderBy, offset, size))
-                    .map(Note::toDto);
+                    .map(Note::toDto).getContent();
         } else {
-            return new PageImpl<>(noteRepository.findAll(spec)).map(Note::toDto);
+            return new PageImpl<>(noteRepository.findAll(spec)).map(Note::toDto).getContent();
         }
     }
 }
