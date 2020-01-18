@@ -6,15 +6,24 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import ro.unibuc.master.groupexpensetracker.common.utils.EntitySpecification;
 import ro.unibuc.master.groupexpensetracker.common.utils.EntityUtils;
 import ro.unibuc.master.groupexpensetracker.common.utils.SearchCriteria;
 import ro.unibuc.master.groupexpensetracker.data.userprofile.UserProfile;
+import ro.unibuc.master.groupexpensetracker.data.userprofile.UserProfileInfo;
 import ro.unibuc.master.groupexpensetracker.domain.repository.UserProfileRepository;
 import ro.unibuc.master.groupexpensetracker.exception.EntityNotFoundException;
 import ro.unibuc.master.groupexpensetracker.presentation.dto.UserDTO;
+import ro.unibuc.master.groupexpensetracker.security.Security;
 
+import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -43,22 +52,27 @@ public class UserProfileService {
         userProfileRepository.save(userProfile);
     }
 
-    public ResponseEntity createUser(UserProfile userProfile) {
+    public ResponseEntity createUser(UserProfile userProfile) throws NoSuchAlgorithmException {
         UserProfile user = userProfileRepository.findByEmail(userProfile.getEmail());
         if (user != null) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body("The email address is already used");
         } else {
-            UserProfile userDB = userProfileRepository.save(userProfile);
-            return ResponseEntity.ok(UserProfile.toDto(userDB));
+            userProfile.setPassword(Security.computeMD5(userProfile.getPassword()));
+            UserProfile u = userProfileRepository.save(userProfile);
+            Authentication auth = this.authenticate(u);
+            SecurityContextHolder.getContext().setAuthentication(auth);
+            return ResponseEntity.ok(new UserProfileInfo(u.getId(), u.getFirstName(), u.getLastName(), u.getEmail(), u.getPassword()));
         }
     }
 
-    public ResponseEntity getUserLoggedId(UserProfile userProfile) {
-        UserProfile user = userProfileRepository.findByEmailAndPassword(userProfile.getEmail(), userProfile.getPassword());
+    public Authentication authenticate(UserProfile userProfile) throws NoSuchAlgorithmException {
+        UserProfile user = userProfileRepository.findByEmailAndPassword(userProfile.getEmail(), Security.computeMD5(userProfile.getPassword()));
         if (user != null) {
-            return ResponseEntity.ok(UserProfile.toDto(user));
+            List<GrantedAuthority> grantedAuths = new ArrayList<>();
+            grantedAuths.add(new SimpleGrantedAuthority("USER"));
+            return new UsernamePasswordAuthenticationToken(user.getEmail(), user.getPassword(), grantedAuths);
         } else {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("The email or the password is invalid");
+            return null;
         }
     }
 

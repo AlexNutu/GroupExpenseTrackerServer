@@ -13,12 +13,22 @@ import java.util.List;
 @Data
 @EqualsAndHashCode(callSuper = true)
 @Entity
-@NoArgsConstructor
 public class UserProfile extends AbstractAuditingEntity {
     private String firstName;
     private String lastName;
     private String password;
     private String email;
+
+    public UserProfile() {
+    }
+
+    public UserProfile(Long id, String firstName, String lastName, String email, String password) {
+        this.id = id;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
+        this.password = password;
+    }
 
     @JsonIgnore
     @EqualsAndHashCode.Exclude
