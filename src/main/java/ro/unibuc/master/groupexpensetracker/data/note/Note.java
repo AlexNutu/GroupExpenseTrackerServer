@@ -21,16 +21,20 @@ public class Note extends AbstractAuditingEntity {
 
     private String message;
 
-    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    private Boolean approved;
+
+    @ManyToOne(cascade = CascadeType.MERGE)
     private UserProfile user;
 
-    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @ManyToOne(cascade = CascadeType.MERGE)
     private Trip trip;
 
     public static NoteDTO toDto(Note note) {
         NoteDTO noteDTO = new NoteDTO();
+        noteDTO.setIdNote(note.getId());
         noteDTO.setCreateDate(note.getCreateDate());
         noteDTO.setMessage(note.getMessage());
+        noteDTO.setApproved(note.getApproved());
         noteDTO.setUser(UserProfile.toDto(note.getUser()));
         return noteDTO;
     }

@@ -9,6 +9,8 @@ import ro.unibuc.master.groupexpensetracker.data.expense.Expense;
 import ro.unibuc.master.groupexpensetracker.domain.service.ExpenseService;
 import ro.unibuc.master.groupexpensetracker.presentation.dto.ExpenseDTO;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("${expense.url}")
 public class ExpenseController {
@@ -20,7 +22,7 @@ public class ExpenseController {
     }
 
     @GetMapping
-    public Page<ExpenseDTO> filterBy(@RequestParam(value = "search", required = false) final String search,
+    public List<ExpenseDTO> filterBy(@RequestParam(value = "search", required = false) final String search,
                                      @RequestParam(value = "direction", required = false) Sort.Direction direction,
                                      @RequestParam(value = "orderBy", required = false) String orderBy,
                                      @RequestParam(value = "page", required = false) final Integer offset,

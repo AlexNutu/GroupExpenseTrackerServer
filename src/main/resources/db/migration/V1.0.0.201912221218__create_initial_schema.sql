@@ -46,6 +46,7 @@ CREATE TABLE IF NOT EXISTS `note` (
     create_date DATETIME,
     modify_date DATETIME,
 	message varchar(255),
+	approved boolean,
     trip_id int,
     user_id int,
     FOREIGN KEY (trip_id) REFERENCES trip (id),
