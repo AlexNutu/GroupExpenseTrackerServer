@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.RestController;
 import ro.unibuc.master.groupexpensetracker.data.notification.Notification;
 import ro.unibuc.master.groupexpensetracker.domain.service.NotificationService;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("${notification.url}")
 public class NotificationController {
@@ -20,7 +22,7 @@ public class NotificationController {
     }
 
     @GetMapping
-    public Page<Notification> filterBy(@RequestParam(value = "search", required = false) final String search,
+    public List<Notification> filterBy(@RequestParam(value = "search", required = false) final String search,
                                        @RequestParam(value = "direction", required = false) Sort.Direction direction,
                                        @RequestParam(value = "orderBy", required = false) String orderBy,
                                        @RequestParam(value = "page", required = false) final Integer offset,

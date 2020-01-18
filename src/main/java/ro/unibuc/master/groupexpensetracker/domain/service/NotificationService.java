@@ -165,7 +165,7 @@ public class NotificationService {
         return message;
     }
 
-    public Page<Notification> findAll(Sort.Direction sortingDirection, String orderBy, final String search, final Integer offset, final Integer size) {
+    public List<Notification> findAll(Sort.Direction sortingDirection, String orderBy, final String search, final Integer offset, final Integer size) {
         final List<SearchCriteria> searchCriteriaList = EntityUtils.generateSearchCriteria(search);
         final Specification<Notification> spec = new EntitySpecification<>(searchCriteriaList);
 
@@ -188,6 +188,6 @@ public class NotificationService {
             notificationRepository.save(notification);
         }
 
-        return notificationPage;
+        return notificationPage.getContent();
     }
 }
