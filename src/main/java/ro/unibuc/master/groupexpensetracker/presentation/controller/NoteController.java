@@ -33,10 +33,12 @@ public class NoteController {
         return Flux.fromIterable(noteService.findAll(direction, orderBy, search, offset, size));
     }
 
+    @PostMapping
     public Mono<ResponseEntity> addNote(@RequestBody Note note) {
         return Mono.just(noteService.addNote(note));
     }
 
+    @PutMapping("/{id}")
     public Mono<ResponseEntity> updateNote(@RequestBody Note note, @PathVariable("id") Long noteId) {
         return Mono.just(noteService.updateNote(note, noteId));
     }
