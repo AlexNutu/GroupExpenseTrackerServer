@@ -25,10 +25,10 @@ public class Expense extends AbstractAuditingEntity {
     private String currency;
     private float percent;
 
-    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @ManyToOne(cascade = {CascadeType.PERSIST})
     private UserProfile user;
 
-    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @ManyToOne(cascade = {CascadeType.PERSIST})
     private Trip trip;
 
     public static ExpenseDTO toDto(Expense expense) {

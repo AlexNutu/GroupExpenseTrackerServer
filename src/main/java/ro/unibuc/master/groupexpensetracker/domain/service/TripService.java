@@ -6,6 +6,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ro.unibuc.master.groupexpensetracker.common.utils.EntitySpecification;
 import ro.unibuc.master.groupexpensetracker.common.utils.EntityUtils;
 import ro.unibuc.master.groupexpensetracker.common.utils.SearchCriteria;
@@ -54,6 +55,7 @@ public class TripService {
         return ResponseEntity.ok().build();
     }
 
+    @Transactional
     public ResponseEntity addNewMember(UserDTO userDTO, long tripId) {
         UserProfile userProfile = userProfileService.getById(userDTO.getId());
         Trip trip = getTrip(tripId);
@@ -70,6 +72,7 @@ public class TripService {
         return ResponseEntity.ok().build();
     }
 
+    @Transactional
     public TripDTO getTripById(Long id) {
         Trip trip = tripRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Could not find trip by id"));
         return Trip.toDto(trip);
