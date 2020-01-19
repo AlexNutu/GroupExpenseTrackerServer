@@ -4,6 +4,8 @@ import com.tunyk.currencyconverter.BankUaCom;
 import com.tunyk.currencyconverter.api.Currency;
 import com.tunyk.currencyconverter.api.CurrencyConverter;
 import com.tunyk.currencyconverter.api.CurrencyConverterException;
+import org.springframework.http.ResponseEntity;
+import reactor.core.publisher.Mono;
 import ro.unibuc.master.groupexpensetracker.common.notification.NotificationTemplate;
 import ro.unibuc.master.groupexpensetracker.common.utils.ExpenseUtils;
 import ro.unibuc.master.groupexpensetracker.common.utils.StringUtils;
@@ -68,8 +70,7 @@ public class GroupExpense implements ExpenseStrategy {
         float percent = newTotal / (initialExpense.getSum() / trip.getMembers().size());
         if (percent > 1.05) {
             float remainingSum = initialExpense.getSum() / trip.getMembers().size() - total;
-            throw new IllegalExpenseException("User has to pay " + remainingSum + " " + initialExpense.getCurrency() +
-                    " for " + initialExpense.getProduct() + ". The sum is too big.");
+            throw new IllegalExpenseException("The sum is too big! " + remainingSum + " " + initialExpense.getCurrency() + " is maximum!");
         }
 
         expenseRepository.save(expense);
