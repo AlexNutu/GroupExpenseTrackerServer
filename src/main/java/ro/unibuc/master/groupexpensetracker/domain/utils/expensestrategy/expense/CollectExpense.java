@@ -67,8 +67,9 @@ public class CollectExpense implements ExpenseStrategy {
         float percent = newTotal / (initialExpense.getSum() / trip.getMembers().size());
         if (percent > 1.05) {
             float remainingSum = initialExpense.getSum() / trip.getMembers().size() - total;
-            throw new IllegalExpenseException("User has to pay " + remainingSum + " " + initialExpense.getCurrency() +
-                    " for " + initialExpense.getProduct() + ". The sum is too big.");
+//            throw new IllegalExpenseException("User has to pay " + remainingSum + " " + initialExpense.getCurrency() +
+//                    " for " + initialExpense.getProduct() + ". The sum is too big.");
+            throw new IllegalExpenseException("The sum is too big! " + remainingSum + " " + initialExpense.getCurrency() + " is maximum!");
         }
 
         expenseRepository.save(expense);

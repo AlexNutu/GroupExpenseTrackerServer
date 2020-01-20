@@ -72,7 +72,7 @@ public class FinalCollectExpense implements ExpenseStrategy {
                 }
             }
         } else {
-            throw new IllegalExpenseException("You do not have enough money to perform the expense");
+            throw new IllegalExpenseException("Insufficient money to perform the expense!");
         }
     }
 }
