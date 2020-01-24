@@ -36,15 +36,15 @@ public class EntitySpecification<T> implements Specification<T> {
             LocalDateTime dateValue;
             switch (searchParam.getOperation()) {
                 case ">":
-                    dateValue = StringUtils.convertStringToDate(searchParam.getValue()).atTime(0, 0);
+                    dateValue = StringUtils.convertStringToDateTime(searchParam.getValue());
                     return cb.greaterThanOrEqualTo((Expression<LocalDateTime>) this.getPath(root, searchParam), dateValue);
                 case "<":
-                    dateValue = StringUtils.convertStringToDate(searchParam.getValue()).atTime(0, 0).plusDays(1);
+                    dateValue = StringUtils.convertStringToDateTime(searchParam.getValue()).plusDays(1);
                     return cb.lessThanOrEqualTo((Expression<LocalDateTime>) this.getPath(root, searchParam), dateValue);
                 case ":":
                     String[] localDateTimes = searchParam.getValue().split("<<");
-                    LocalDateTime startDate = StringUtils.convertStringToDate(localDateTimes[0]).atTime(0, 0);
-                    LocalDateTime endDate = StringUtils.convertStringToDate(localDateTimes[1]).atTime(0, 0).plusDays(1);
+                    LocalDateTime startDate = StringUtils.convertStringToDateTime(localDateTimes[0]);
+                    LocalDateTime endDate = StringUtils.convertStringToDateTime(localDateTimes[1]).plusDays(1);
                     return cb.between((Expression<LocalDateTime>) this.getPath(root, searchParam), startDate, endDate);
             }
         } else if (String.class.isAssignableFrom(fieldClass)) {

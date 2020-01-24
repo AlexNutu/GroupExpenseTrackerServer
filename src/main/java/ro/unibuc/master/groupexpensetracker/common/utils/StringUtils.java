@@ -3,6 +3,7 @@ package ro.unibuc.master.groupexpensetracker.common.utils;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.ZoneId;
 
 public class StringUtils {
@@ -22,4 +23,16 @@ public class StringUtils {
             throw new IllegalArgumentException("Filter " + stringDate + " is not like this pattern " + datePattern);
         }
     }
+
+    public static LocalDateTime convertStringToDateTime(String stringDate) {
+        String datePattern = "yyyy-MM-dd HH:mm";
+        DateFormat format = new SimpleDateFormat(datePattern);
+        try {
+            return format.parse(stringDate).toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
+        } catch (Exception e) {
+            throw new IllegalArgumentException("Filter " + stringDate + " is not like this pattern " + datePattern);
+        }
+    }
+
+
 }

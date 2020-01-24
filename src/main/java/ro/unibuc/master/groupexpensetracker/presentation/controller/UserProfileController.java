@@ -22,11 +22,12 @@ public class UserProfileController {
     }
 
     @GetMapping
-    public Flux<UserDTO> filterBy(@RequestParam(value = "search", required = false) final String search,
-                                  @RequestParam(value = "direction", required = false) Sort.Direction direction,
-                                  @RequestParam(value = "orderBy", required = false) String orderBy,
-                                  @RequestParam(value = "page", required = false) final Integer offset,
-                                  @RequestParam(value = "size", required = false) final Integer size) {
+
+    public Flux<UserProfile> filterBy(@RequestParam(value = "search", required = false) final String search,
+                                      @RequestParam(value = "direction", required = false) Sort.Direction direction,
+                                      @RequestParam(value = "orderBy", required = false) String orderBy,
+                                      @RequestParam(value = "page", required = false) final Integer offset,
+                                      @RequestParam(value = "size", required = false) final Integer size) {
         return Flux.fromIterable(userProfileService.findAll(direction, orderBy, search, offset, size));
     }
 
