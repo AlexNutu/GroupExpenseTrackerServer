@@ -41,7 +41,7 @@ public class LoginController {
         if (auth != null) {
             SecurityContextHolder.getContext().setAuthentication(auth);
             UserProfile u = userProfileService.getByEmail(auth.getPrincipal().toString());
-            return Mono.just(ResponseEntity.ok(new UserProfileInfo(u.getId(), u.getFirstName(), u.getLastName(), u.getEmail(), u.getPassword())));
+            return Mono.just(ResponseEntity.ok(new UserProfileInfo(u.getId(), u.getFirstName(), u.getLastName(), u.getPassword(), u.getEmail(), u.getReceiveNotifications())));
         } else {
             return Mono.just(ResponseEntity.badRequest().body("Invalid email or password"));
         }

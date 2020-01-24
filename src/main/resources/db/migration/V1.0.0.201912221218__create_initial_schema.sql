@@ -5,7 +5,8 @@ CREATE TABLE IF NOT EXISTS `user_profile` (
     email varchar(255),
     password varchar(255),
     first_name varchar(255),
-    last_name varchar(255)
+    last_name varchar(255),
+    receive_notifications BIT DEFAULT true
 );
 
 CREATE TABLE IF NOT EXISTS `trip` (

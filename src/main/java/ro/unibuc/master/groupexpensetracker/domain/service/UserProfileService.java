@@ -1,5 +1,6 @@
 package ro.unibuc.master.groupexpensetracker.domain.service;
 
+import org.apache.catalina.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Sort;
@@ -58,10 +59,11 @@ public class UserProfileService {
             return ResponseEntity.status(HttpStatus.CONFLICT).body("The email address is already used");
         } else {
             userProfile.setPassword(Security.computeMD5(userProfile.getPassword()));
+            userProfile.setReceiveNotifications(true);
             UserProfile u = userProfileRepository.save(userProfile);
             Authentication auth = this.authenticate(u);
             SecurityContextHolder.getContext().setAuthentication(auth);
-            return ResponseEntity.ok(new UserProfileInfo(u.getId(), u.getFirstName(), u.getLastName(), u.getEmail(), u.getPassword()));
+            return ResponseEntity.ok(new UserProfileInfo(u.getId(), u.getFirstName(), u.getLastName(), u.getPassword(), u.getEmail(), u.getReceiveNotifications()));
         }
     }
 
@@ -102,5 +104,15 @@ public class UserProfileService {
             return new PageImpl<>(userProfileRepository.findAll(spec))
                     .map(UserProfile::toDto).getContent();
         }
+    }
+
+    public ResponseEntity updateUser(UserProfile userProfile, long userId) {
+        UserProfile userProfileDB = userProfileRepository.findById(userId);
+        userProfileDB.setFirstName(userProfile.getFirstName());
+        userProfileDB.setLastName(userProfile.getLastName());
+        userProfileDB.setEmail(userProfile.getEmail());
+        userProfileDB.setReceiveNotifications(userProfile.getReceiveNotifications());
+        userProfileRepository.save(userProfileDB);
+        return ResponseEntity.ok().build();
     }
 }

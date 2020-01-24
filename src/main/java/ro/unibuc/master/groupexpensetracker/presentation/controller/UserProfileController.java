@@ -34,4 +34,9 @@ public class UserProfileController {
     public Mono<ResponseEntity> getUserDetails(@PathVariable("userId") Long userId) {
         return Mono.just(userProfileService.getUserDetails(userId));
     }
+
+    @PutMapping("/{id}")
+    public Mono<ResponseEntity> updateUser(@RequestBody UserProfile userProfile, @PathVariable("id") Long userId) {
+        return Mono.just(userProfileService.updateUser(userProfile, userId));
+    }
 }
