@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import ro.unibuc.master.groupexpensetracker.common.utils.EntitySpecification;
 import ro.unibuc.master.groupexpensetracker.common.utils.EntityUtils;
 import ro.unibuc.master.groupexpensetracker.common.utils.SearchCriteria;
+import ro.unibuc.master.groupexpensetracker.data.deletedrecords.DeletedRecord;
 import ro.unibuc.master.groupexpensetracker.data.expense.Expense;
 import ro.unibuc.master.groupexpensetracker.data.note.Note;
 import ro.unibuc.master.groupexpensetracker.data.trip.Trip;
@@ -28,10 +29,13 @@ public class NoteService {
 
     private final UserProfileService userProfileService;
 
-    public NoteService(NoteRepository noteRepository, TripService tripService, UserProfileService userProfileService) {
+    private final DeletedRecordService deletedRecordService;
+
+    public NoteService(NoteRepository noteRepository, TripService tripService, UserProfileService userProfileService, DeletedRecordService deletedRecordService) {
         this.noteRepository = noteRepository;
         this.tripService = tripService;
         this.userProfileService = userProfileService;
+        this.deletedRecordService = deletedRecordService;
     }
 
     public ResponseEntity addNote(Note note) {
@@ -59,10 +63,14 @@ public class NoteService {
     public ResponseEntity removeNote(long noteId) {
         Note note = noteRepository.findById(noteId).orElseThrow(() -> new EntityNotFoundException("Could not find note by id"));
         noteRepository.delete(note);
+        DeletedRecord deletedRecord = new DeletedRecord();
+        deletedRecord.setTableName("Note");
+        deletedRecord.setRecordId(noteId);
+        deletedRecordService.addDeletedRecord(deletedRecord);
         return ResponseEntity.ok().build();
     }
 
-    public Page<NoteDTO> findAll(Sort.Direction sortingDirection, String orderBy, final String search, final Integer offset, final Integer size) {
+    public Page<Note> findAll(Sort.Direction sortingDirection, String orderBy, final String search, final Integer offset, final Integer size) {
         final List<SearchCriteria> searchCriteriaList = EntityUtils.generateSearchCriteria(search);
         final Specification<Note> spec = new EntitySpecification<>(searchCriteriaList);
 
@@ -73,10 +81,9 @@ public class NoteService {
 
         if (size != null) {
             return noteRepository.findAll(spec,
-                    EntityUtils.getPageRequest(sortingDirection, orderBy, offset, size))
-                    .map(Note::toDto);
+                    EntityUtils.getPageRequest(sortingDirection, orderBy, offset, size));
         } else {
-            return new PageImpl<>(noteRepository.findAll(spec)).map(Note::toDto);
+            return new PageImpl<>(noteRepository.findAll(spec));
         }
     }
 }

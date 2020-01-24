@@ -62,3 +62,11 @@ CREATE TABLE IF NOT EXISTS `notification` (
     sent boolean,
     FOREIGN KEY (user_id) REFERENCES user_profile (id)
 );
+
+CREATE TABLE IF NOT EXISTS `deleted_record`(
+	  id int NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    create_date DATETIME,
+    modify_date DATETIME,
+	  table_name varchar(255),
+    record_id int
+);

@@ -67,7 +67,7 @@ public class UserProfileService {
         }
     }
 
-    public Page<UserDTO> findAll(Sort.Direction sortingDirection, String orderBy, final String search, final Integer offset, final Integer size) {
+    public Page<UserProfile> findAll(Sort.Direction sortingDirection, String orderBy, final String search, final Integer offset, final Integer size) {
         final List<SearchCriteria> searchCriteriaList = EntityUtils.generateSearchCriteria(search);
         final Specification<UserProfile> spec = new EntitySpecification<>(searchCriteriaList);
 
@@ -78,11 +78,11 @@ public class UserProfileService {
 
         if (size != null) {
             return userProfileRepository.findAll(spec,
-                    EntityUtils.getPageRequest(sortingDirection, orderBy, offset, size))
-                    .map(UserProfile::toDto);
+                    EntityUtils.getPageRequest(sortingDirection, orderBy, offset, size));
+
         } else {
-            return new PageImpl<>(userProfileRepository.findAll(spec))
-                    .map(UserProfile::toDto);
+            return new PageImpl<>(userProfileRepository.findAll(spec));
+
         }
     }
 }
