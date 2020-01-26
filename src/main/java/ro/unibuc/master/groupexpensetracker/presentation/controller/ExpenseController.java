@@ -24,7 +24,7 @@ public class ExpenseController {
     }
 
     @GetMapping
-    public Flux<ExpenseDTO> filterBy(@RequestParam(value = "search", required = false) final String search,
+    public Flux<Expense> filterBy(@RequestParam(value = "search", required = false) final String search,
                                      @RequestParam(value = "direction", required = false) Sort.Direction direction,
                                      @RequestParam(value = "orderBy", required = false) String orderBy,
                                      @RequestParam(value = "page", required = false) final Integer offset,
