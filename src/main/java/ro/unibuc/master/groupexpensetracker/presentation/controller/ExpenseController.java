@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+import ro.unibuc.master.groupexpensetracker.common.utils.StringUtils;
 import ro.unibuc.master.groupexpensetracker.data.expense.Expense;
 import ro.unibuc.master.groupexpensetracker.domain.service.ExpenseService;
 import ro.unibuc.master.groupexpensetracker.presentation.dto.ExpenseDTO;
@@ -25,10 +26,10 @@ public class ExpenseController {
 
     @GetMapping
     public Flux<Expense> filterBy(@RequestParam(value = "search", required = false) final String search,
-                                     @RequestParam(value = "direction", required = false) Sort.Direction direction,
-                                     @RequestParam(value = "orderBy", required = false) String orderBy,
-                                     @RequestParam(value = "page", required = false) final Integer offset,
-                                     @RequestParam(value = "size", required = false) final Integer size) {
+                                  @RequestParam(value = "direction", required = false) Sort.Direction direction,
+                                  @RequestParam(value = "orderBy", required = false) String orderBy,
+                                  @RequestParam(value = "page", required = false) final Integer offset,
+                                  @RequestParam(value = "size", required = false) final Integer size) {
         return Flux.fromIterable(expenseService.findAll(direction, orderBy, search, offset, size));
     }
 
@@ -42,4 +43,15 @@ public class ExpenseController {
                                           @PathVariable("id") Long tripId) throws CurrencyConverterException {
         return Mono.just(ResponseEntity.ok().body(expenseService.getUnperformedExpenses(tripId, product)));
     }
+
+    @GetMapping("/products/group/trip/{id}")
+    public Flux<Expense> getGroupProducts(@PathVariable("id") Long tripId) {
+        return Flux.fromIterable(expenseService.getProducts(tripId, StringUtils.INITIAL_GROUP_EXPENSE));
+    }
+
+    @GetMapping("/products/collect/trip/{id}")
+    public Flux<Expense> getCollectProducts(@PathVariable("id") Long tripId) {
+        return Flux.fromIterable(expenseService.getProducts(tripId, StringUtils.INITIAL_COLLECT_EXPENSE));
+    }
+
 }

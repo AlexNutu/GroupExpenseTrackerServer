@@ -21,7 +21,9 @@ import ro.unibuc.master.groupexpensetracker.exception.IllegalExpenseException;
 import ro.unibuc.master.groupexpensetracker.presentation.dto.ExpenseDTO;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class ExpenseService {
@@ -174,5 +176,9 @@ public class ExpenseService {
             }
         }
         return unperformedCollectExpenses;
+    }
+
+    public List<Expense> getProducts(Long tripId, String type) {
+        return expenseRepository.findByTripIdAndExpensiveType(tripId, type);
     }
 }
