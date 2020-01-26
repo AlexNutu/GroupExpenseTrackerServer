@@ -15,7 +15,8 @@ public class StringUtils {
     public static final String FINAL_COLLECT_EXPENSE = "Final Collect Expense";
 
     public static LocalDate convertStringToDate(String stringDate) {
-        String datePattern = "dd-M-yyyy";
+        String datePattern = "yyyy-mm-dd";
+//        String datePattern = "dd-M-yyyy";
         DateFormat format = new SimpleDateFormat(datePattern);
         try {
             return format.parse(stringDate).toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
