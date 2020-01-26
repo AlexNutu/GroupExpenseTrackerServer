@@ -16,7 +16,7 @@ import java.security.NoSuchAlgorithmException;
 import java.util.List;
 
 @RestController
-@RequestMapping("/login")
+@RequestMapping("/group-expensive-tracker")
 public class LoginController {
 
     private final UserProfileService userProfileService;
@@ -35,13 +35,24 @@ public class LoginController {
 
     }
 
-    @PostMapping("/")
+    @PostMapping("/login")
     public Mono<ResponseEntity> authenticate(@RequestBody UserProfile userProfile) throws NoSuchAlgorithmException {
         Authentication auth = userProfileService.authenticate(userProfile);
         if (auth != null) {
             SecurityContextHolder.getContext().setAuthentication(auth);
             UserProfile u = userProfileService.getByEmail(auth.getPrincipal().toString());
             return Mono.just(ResponseEntity.ok(new UserProfileInfo(u.getId(), u.getFirstName(), u.getLastName(), u.getPassword(), u.getEmail(), u.getReceiveNotifications())));
+        } else {
+            return Mono.just(ResponseEntity.badRequest().body("Invalid email or password"));
+        }
+    }
+
+    @PostMapping("/logout")
+    public Mono<ResponseEntity> logout(@RequestBody UserProfile userProfile) throws NoSuchAlgorithmException {
+        UserProfile currentUser = userProfileService.getByEmail(userProfile.getEmail());
+        if (currentUser != null) {
+            SecurityContextHolder.getContext().setAuthentication(null);
+            return Mono.just(ResponseEntity.ok().body("Successfully logout"));
         } else {
             return Mono.just(ResponseEntity.badRequest().body("Invalid email or password"));
         }
